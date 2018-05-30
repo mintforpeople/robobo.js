@@ -1058,6 +1058,8 @@ Remote.prototype = {
     this.statusmap.set("IRSensorStatus5",0);
     this.statusmap.set("IRSensorStatus6",0);
     this.statusmap.set("IRSensorStatus7",0);
+    this.statusmap.set("IRSensorStatus8",0);
+
   },
 
   resetBlobSensor : function() {
@@ -1169,7 +1171,6 @@ Remote.prototype = {
   manageStatus : function (msg) {
 
 
-    //console.log(msg.name);
 
     if (msg.name == "TapNumber"){
       console.log(msg.value);
@@ -1441,7 +1442,7 @@ Remote.prototype = {
     else {
       console.log('Lost status '+ msg.name);
     }
-
+    //console.log('Status '+ msg.name);
 
   }, //ENDOF manageStatus
 
