@@ -383,7 +383,7 @@ Remote.prototype = {
   moveWheelsSeparatedWait: function(lSpeed,rSpeed,time,callback) {
     if (this.filterMovement((Math.abs(lSpeed)+Math.abs(rSpeed)),"wheels")){
       this.wheelLastTime = Date.now();
-      console.log("moveWheelsSeparatedWait "+lSpeed+" "+rSpeed+" "+time);
+      //console.log("moveWheelsSeparatedWait "+lSpeed+" "+rSpeed+" "+time);
       lS = ''+lSpeed;
       rS = ''+rSpeed;
 
@@ -451,7 +451,7 @@ Remote.prototype = {
     if (this.filterMovement(vel,"pan")){
       this.panLastTime = Date.now();
       s = ''+ vel;
-      pos = scratchToRoboboAngle(pos);
+      pos = this.scratchToRoboboAngle(pos);
       
       if (pos > this.panSuperiorLimit){
         pos = this.panSuperiorLimit;
@@ -484,7 +484,7 @@ Remote.prototype = {
     if (this.filterMovement(vel,"pan")){
       this.panLastTime = Date.now();
       s = ''+ vel;
-      pos = scratchToRoboboAngle(pos);    
+      pos = this.scratchToRoboboAngle(pos);    
       
       if (pos > this.panSuperiorLimit){
         pos = this.panSuperiorLimit;
@@ -1371,7 +1371,7 @@ Remote.prototype = {
     }
     else if (msg.name == "PAN") {
       //console.log("PAN "+msg.value['panPos']);
-      this.statusmap.set("panPos",roboboToScratchAngle(parseInt(msg.value['panPos'])));
+      this.statusmap.set("panPos",this.roboboToScratchAngle(parseInt(msg.value['panPos'])));
     }
 
     else if (msg.name == "TILT") {
@@ -1450,7 +1450,14 @@ Remote.prototype = {
   manageResponse : function (msg) {
       console.log(JSON.stringify(msg));
 
-  } //ENDOF manageResponse
+  }, //ENDOF manageResponse
+   
+  scratchToRoboboAngle : function(angle){
+    return angle +180;
+  },
 
+  roboboToScratchAngle: function(angle){
+    return angle -180;
+  }
 }
 module.exports = Remote;
