@@ -55,11 +55,11 @@ Robobo.prototype = {
 
     },
     moveWheelsByTime : async function(speedR, speedL, time){
+        let unlock = false
         if (time == undefined){
             this.rem.moveWheelsSeparated(speedR, speedL, 2147483647);
-            this.update();
         }else{
-            var unlock = false
+            
             this.rem.moveWheelsSeparatedWait(speedR, speedL, time,()=>(unlock = true));
             while (!unlock){
                 await this.update()
@@ -72,7 +72,7 @@ Robobo.prototype = {
     },
     
     moveWheelsByDegrees : async function(wheel,degrees,speed){
-        var unlock = false
+        let unlock = false
         this.rem.moveWheelsByDegree(wheel,degrees,speed,()=>(unlock = true))
         while (!unlock){
             await this.update()
@@ -82,7 +82,7 @@ Robobo.prototype = {
     },
 
     movePanTo : async function(position,speed){
-        var unlock = false
+        let unlock = false
         this.rem.movePanWait(position,speed,()=>(unlock = true))
         while (!unlock){
             await this.update()
@@ -91,7 +91,7 @@ Robobo.prototype = {
 
     },
     sayText : async function(text){
-        var unlock = false
+        let unlock = false
         this.rem.talk(text,()=>(unlock = true));
         while (!unlock){
             await this.update()
@@ -101,7 +101,7 @@ Robobo.prototype = {
     },
 
     moveTiltTo : async function(position,speed){
-        var unlock = false
+        let unlock = false
         this.rem.moveTiltWait(position,speed,()=>(unlock = true))
         while (!unlock){
             await this.update()
