@@ -1,35 +1,44 @@
 async function main(){
-var Robobo = require('./robobo');
+    var Robobo = require('./robobo');
 
-robobo = new Robobo('192.168.0.253');
-await robobo.connect();
-/*robobo.whenATapIsDetected(async ()=>{await robobo.sayText('Hola mundo');
-await robobo.sayText('Hola mundo');
-});
-await robobo.moveWheelsByTime(30,30,5);
-await robobo.moveWheelsByDegrees('both',180,60);
-await robobo.movePanTo(-100,30);
-await robobo.movePanTo(0,30);
-await robobo.moveTiltTo(110,30);
-await robobo.moveTiltTo(90,30);
-robobo.setLedColorTo('all','red');
-await robobo.pause(1500);
-robobo.setLedColorTo('all','blue');
-await robobo.sayText('Hola mundo')*/
-while (true){
-    robobo.setLedColorTo('Front-C','red');
-    await robobo.pause(200);
-    robobo.setLedColorTo('Front-C','blue');
-    await robobo.pause(200);
+    robobo = new Robobo('192.168.0.253');
+
+    await robobo.connect();
+
+    robobo.whenANoteIsDetected(()=>(console.log('New Note '+ robobo.readLastNote().note)));
+    robobo.whenANewFaceIsDetected(()=>(console.log('New Face ' +robobo.readFaceSensor().distance)));
+    robobo.whenAFaceIsLost(() => (console.log('Face Lost')));
+    robobo.whenANewColorBlobIsDetected(() => (console.log(robobo.readAllColorBlobs())))
+    robobo.whenATapIsDetected(()=>(console.log('New Tap ' +robobo.readTapSensor().zone)));
+    robobo.whenAFlingIsDetected(()=>(console.log('New Fling ' +robobo.readFlingSensor())));
+
+    //robobo.sayText('Hola mundo');
+    //await robobo.sayText('Hola mundo');
+    //await robobo.sayText('Hola mundo');
+
+    
+
+    /*console.log('ANTES');
+     await robobo.moveWheelsByTime(30,30,1);
+     console.log('DESPUES');
+     await robobo.moveWheelsByTime(-30,30,1);
+
+    await robobo.moveWheelsByDegrees('both',180,60);
+    console.log('DSPUes2');
+*/
+     robobo.movePanTo(-100,30);
+    await robobo.movePanTo(0,30);
+    await robobo.moveTiltTo(110,30);
+    await robobo.moveTiltTo(90,30);
+    robobo.setLedColorTo('all','red');
+    await robobo.pause(1.5);
+    robobo.setLedColorTo('all','blue');
+    await robobo.sayText('Hola mundo')
+    await robobo.pause(1.5);
+    x = false
+   
 
 }
-
-
-console.log('TEST');
-
-
-}
-
-
 main()
+console.log('hagsdjagsd');
  

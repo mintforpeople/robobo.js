@@ -1123,15 +1123,15 @@ Remote.prototype = {
       return "none";
     }else if (y<17){
         return "forehead";
-    }else if (rangeFun(y,"between",17,56) && rangeFun(x,"between", 15, 85)){
+    }else if (this.rangeFun(y,"between",17,56) && this.rangeFun(x,"between", 15, 85)){
         return "eye";
-    }else if (rangeFun(y,"between",65,77) && rangeFun(x,"between", 25, 75)){
+    }else if (this.rangeFun(y,"between",65,77) && this.rangeFun(x,"between", 25, 75)){
         return "mouth";
-    }else if (rangeFun(x,"between",0,15)){
+    }else if (this.rangeFun(x,"between",0,15)){
         return "left";
-    }else if (rangeFun(x,"between",85,100)){
+    }else if (this.rangeFun(x,"between",85,100)){
         return "right";
-    }else if (rangeFun(y,"between",77,100) && rangeFun(x,"between", 15, 85)){
+    }else if (this.rangeFun(y,"between",77,100) && this.rangeFun(x,"between", 15, 85)){
         return "chin";
     }
   },
@@ -1381,11 +1381,11 @@ Remote.prototype = {
       this.statusmap.set("tiltPos",parseInt(msg.value['tiltPos']));
     }
     else if (msg.name == "BLOB") {
-      console.log(msg.value['color']+'  '+msg.value['posx']+'  '+msg.value['posy']+'  '+msg.value['size']);
+      //console.log(msg.value['color']+'  '+msg.value['posx']+'  '+msg.value['posy']+'  '+msg.value['size']);
       this.statusmap.set("blobPosx"+msg.value['color'],msg.value['posx']);
       this.statusmap.set("blobPosy"+msg.value['color'],msg.value['posy']);
       this.statusmap.set("blobSize"+msg.value['color'],msg.value['size']);
-
+      (this.callbackmap.get("onNewBlob"))();
 
     }
 
@@ -1459,6 +1459,39 @@ Remote.prototype = {
 
   roboboToScratchAngle: function(angle){
     return angle -180;
-  }
+  },
+
+  rangeFun: function(input,type,r1,r2) {		
+    	
+    if (type == "between"){		
+      if(r1<r2){		
+        if ((input>r1)&&(input<r2)){		
+          return true;		
+        }else {		
+          return false;		
+        }		
+      }else {		
+        if ((input>r2)&&(input<r1)){		
+          return true;		
+        }else {		
+          return false;		
+        }		
+      }		
+    }else {		
+      if(r1<r2){		
+        if ((input<r1)||(input>r2)){		
+          return true;		
+        }else {		
+          return false;		
+        }		
+      }else {		
+        if ((input<r2)||(input>r1)){		
+          return true;		
+        }else {		
+          return false;		
+        }		
+      }		
+    }		
+  },
 }
 module.exports = Remote;

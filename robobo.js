@@ -57,8 +57,7 @@ Robobo.prototype = {
     moveWheelsByTime : async function(speedR, speedL, time){
         if (time == undefined){
             this.rem.moveWheelsSeparated(speedR, speedL, 2147483647);
-
-            
+            this.update();
         }else{
             var unlock = false
             this.rem.moveWheelsSeparatedWait(speedR, speedL, time,()=>(unlock = true));
@@ -91,6 +90,15 @@ Robobo.prototype = {
         unlock=false;
 
     },
+    sayText : async function(text){
+        var unlock = false
+        this.rem.talk(text,()=>(unlock = true));
+        while (!unlock){
+            await this.update()
+        }
+        console.log('desbloqueo')
+        unlock=false;
+    },
 
     moveTiltTo : async function(position,speed){
         var unlock = false
@@ -110,15 +118,7 @@ Robobo.prototype = {
         this.rem.changeEmotion(emotion);
     },
 
-    sayText : async function(text){
-        var unlock = false
-        this.rem.talk(text,()=>(unlock = true));
-        while (!unlock){
-            await this.update()
-        }
 
-        unlock=false;
-    },
 
     playSound :  function(sound){
         this.rem.playEmotionSound(sound);
@@ -154,16 +154,16 @@ Robobo.prototype = {
     },
     
     readAllIRSensor : function(){
-        return [
-            this.rem.getIRValue('Front-C'),            
-            this.rem.getIRValue('Front-L'),
-            this.rem.getIRValue('Front-LL'),
-            this.rem.getIRValue('Front-R'),
-            this.rem.getIRValue('Front-RR'),
-            this.rem.getIRValue('Back-C'),
-            this.rem.getIRValue('Back-L'),
-            this.rem.getIRValue('Back-R')
-        ]
+        return {
+            FrontC: this.rem.getIRValue('Front-C'),            
+            FrontL: this.rem.getIRValue('Front-L'),
+            FrontLL: this.rem.getIRValue('Front-LL'),
+            FrontR: this.rem.getIRValue('Front-R'),
+            FrontRR: this.rem.getIRValue('Front-RR'),
+            BackC: this.rem.getIRValue('Back-C'),
+            BackL: this.rem.getIRValue('Back-L'),
+            BackR: this.rem.getIRValue('Back-R')
+        }
         
     },
 
@@ -286,7 +286,7 @@ Robobo.prototype = {
     pause : async function (time){
         let wait = new Promise(function(resolve,reject){
         setTimeout(() => {
-        resolve(1)},time);
+        resolve(1)},time*1000);
         });
         let result = await wait;
     },
@@ -302,7 +302,7 @@ Robobo.prototype = {
     },
 
     whenANewColorBlobIsDetected : function(fun){
-        this.rem.registerCallback("onLostFace",fun);
+        this.rem.registerCallback("onNewBlob",fun);
     },
     whenATapIsDetected : function(fun){
         this.rem.registerCallback("onNewTap",fun);
