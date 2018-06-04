@@ -647,12 +647,13 @@ Remote.prototype = {
 
 
   /** Returns the last value detected by the infrared senseor specified by 'irnumber' */
-  getIRValue : function (irnumber) {
-    return this.statusmap.get("IRSensorStatus"+irnumber);
+  getIRValue : function (ir) {
+    return this.statusmap.get(ir);
   },//ENDOF getIRValue
 
   /** Sets the value of an IR sensor using its key from IRS */
   setIRValue : function(key, value) {
+    //console.log(key+' '+value);
     if (value <= this.minIRValue) { //limit the minimun value
       value = 0;
     }

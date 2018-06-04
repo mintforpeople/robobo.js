@@ -8,10 +8,10 @@ function Robobo(ip){
         this.connectionState = arg}.bind(this))
 
     this.unlock = false;
-    this.unlockFunction = function(){ this.unlock = true }.bind(this);
+    this.unlockFunction = function(){  }.bind(this);
 
     this.rem.registerCallback('talkCallback',this.unlockFunction);
-    this.rem.registerCallback('onNewColor',this.unlockFunction);
+    this.rem.registerCallback('onNewBlob',this.unlockFunction);
     this.rem.registerCallback('onLowBatt',this.unlockFunction);
     this.rem.registerCallback('onLowOboBatt',this.unlockFunction);
     this.rem.registerCallback('onLostFace',this.unlockFunction);
@@ -155,14 +155,16 @@ Robobo.prototype = {
     
     readAllIRSensor : function(){
         return {
-            FrontC: this.rem.getIRValue('Front-C'),            
+            BackR: this.rem.getIRValue('Back-R'),
+            BackC: this.rem.getIRValue('Back-C'),
+            FrontRR: this.rem.getIRValue('Front-RR'),
+            FrontR: this.rem.getIRValue('Front-R'),
+            FrontC: this.rem.getIRValue('Front-C'), 
             FrontL: this.rem.getIRValue('Front-L'),
             FrontLL: this.rem.getIRValue('Front-LL'),
-            FrontR: this.rem.getIRValue('Front-R'),
-            FrontRR: this.rem.getIRValue('Front-RR'),
-            BackC: this.rem.getIRValue('Back-C'),
             BackL: this.rem.getIRValue('Back-L'),
-            BackR: this.rem.getIRValue('Back-R')
+
+            
         }
         
     },
