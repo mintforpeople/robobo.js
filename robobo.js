@@ -1,59 +1,58 @@
 var Remote = require('./remote-library/remotelib');
 
-function Robobo(ip){
-    this.connectionState = 0;
-    this.rem = new Remote(ip.trim(),'');
-    this.rem.registerCallback('onConnectionChanges', function(arg){
-        console.log('Connection State: '+arg);
-        this.connectionState = arg}.bind(this))
 
-    this.unlockFunction = function(){  }.bind(this);
+class Robobo {
+    constructor(ip) {
+        this.connectionState = 0;
+        this.rem = new Remote(ip.trim(),'');
+        this.rem.registerCallback('onConnectionChanges', arg => {
+            console.log('Connection State: '+arg);
+            this.connectionState = arg})
 
-    this.rem.registerCallback('talkCallback',this.unlockFunction);
-    this.rem.registerCallback('onNewBlob',this.unlockFunction);
-    this.rem.registerCallback('onLowBatt',this.unlockFunction);
-    this.rem.registerCallback('onLowOboBatt',this.unlockFunction);
-    this.rem.registerCallback('onLostFace',this.unlockFunction);
-    this.rem.registerCallback('onNewFace',this.unlockFunction);
-    this.rem.registerCallback('onFall',this.unlockFunction);
-    this.rem.registerCallback('onGap',this.unlockFunction);
-    this.rem.registerCallback('onNewTap',this.unlockFunction);
-    this.rem.registerCallback('onError',this.unlockFunction);
-    this.rem.registerCallback('onPhrase',this.unlockFunction);
-    this.rem.registerCallback('onNewNote',this.unlockFunction);
+        this.unlockFunction = () => {  };
 
+        this.rem.registerCallback('talkCallback',this.unlockFunction);
+        this.rem.registerCallback('onNewBlob',this.unlockFunction);
+        this.rem.registerCallback('onLowBatt',this.unlockFunction);
+        this.rem.registerCallback('onLowOboBatt',this.unlockFunction);
+        this.rem.registerCallback('onLostFace',this.unlockFunction);
+        this.rem.registerCallback('onNewFace',this.unlockFunction);
+        this.rem.registerCallback('onFall',this.unlockFunction);
+        this.rem.registerCallback('onGap',this.unlockFunction);
+        this.rem.registerCallback('onNewTap',this.unlockFunction);
+        this.rem.registerCallback('onError',this.unlockFunction);
+        this.rem.registerCallback('onPhrase',this.unlockFunction);
+        this.rem.registerCallback('onNewNote',this.unlockFunction);
 
+    }
 
-}
-
-Robobo.prototype = {
-
-    connect : async function(){
+    async connect() {
         this.rem.connect();
         while (this.rem.connectionState == Remote.ConnectionStateEnum.CONNECTING) {
-            await this.update();
+             await this.update();
 
 
         }
         console.log('Post Connect');
 
         
-    },
+    }
 
-    disconnect : async function(){
+    async disconnect() {
         this.rem.closeConnection(false);
         while (this.rem.connectionState != Remote.ConnectionStateEnum.DISCONNECTED) {
-            await this.update();
+             await this.update();
 
         }
         console.log('Post Disconnect');
-    },
+    }
 
-    stopMotors: function(){
+    stopMotors() {
         this.rem.moveWheelsSeparated(0,0,0);
 
-    },
-    moveWheelsByTime : async function(speedR, speedL, time){
+    }
+
+    async moveWheelsByTime(speedR, speedL, time) {
         console.log('MOVEWHEELS')
         let unlock = false
         if (time == undefined){
@@ -62,16 +61,16 @@ Robobo.prototype = {
             
             this.rem.moveWheelsSeparatedWait(speedR, speedL, time,()=>(unlock = true));
             while (!unlock){
-                await this.update()
+                 await this.update()
             }
 
             unlock=false;
         }
         
 
-    },
-    
-    moveWheelsByDegrees : async function(wheel,degrees,speed){
+    }
+
+    async moveWheelsByDegrees(wheel, degrees, speed) {
         let unlock = false
         this.rem.moveWheelsByDegree(wheel,degrees,speed,()=>(unlock = true))
         while (!unlock){
@@ -79,10 +78,14 @@ Robobo.prototype = {
         }
         unlock=false;
 
-    },
+    }
 
-    movePanTo : async function(position,speed,blocking){
+    async movePanTo(position, speed, blocking) {
         if ((blocking == undefined)||(blocking == false)){
+            this.rem.movePan(position,speed);
+
+        }
+        else {
             let unlock = false
             this.rem.movePanWait(position,speed,()=>(unlock = true))
             while (!unlock){
@@ -90,85 +93,81 @@ Robobo.prototype = {
             }
             unlock=false;
         }
-        else {
-            this.rem.movePan(position,speed);
-        }
 
 
-    },
-    
-    moveTiltTo : async function(position,speed,blocking){
+    }
+
+    async moveTiltTo(position, speed, blocking) {
         if ((blocking == undefined)||(blocking == false)){
 
+            this.rem.moveTilt(position,blocking)
+
+        }else {
             let unlock = false
             this.rem.moveTiltWait(position,speed,()=>(unlock = true))
             while (!unlock){
-                await this.update()
+               await this.update()
             }
             unlock=false;
-        }else {
-            this.rem.moveTilt(position,blocking)
         }
 
-    },
+    }
 
-    setLedColorTo : function(led,color){
-        this.rem.setLedColor(led+'',color);
-    },
-    
-    setEmotionTo : function(emotion){
+    setLedColorTo(led, color) {
+        this.rem.setLedColor(`${led}`,color);
+    }
+
+    setEmotionTo(emotion) {
         this.rem.changeEmotion(emotion);
-    },
+    }
 
-    sayText : async function(text){
+    async sayText(text) {
         let unlock = false
         this.rem.talk(text,()=>(unlock = true));
         while (!unlock){
             await this.update()
         }
         unlock=false;
-    },
+    }
 
-
-
-    playSound :  function(sound){
+    playSound(sound) {
         this.rem.playEmotionSound(sound);
         
-    },
+    }
 
-    log : function(text){
-        console.log(text)
-    },
+    log(text) {
+        console.log(text);
+    }
 
-    playNote : async function(note, time){
+    async playNote(note, time) {
         this.rem.playNote(note,time);
         await this.pause(time);
-    },
+    }
 
-    readWheelPosition: function(wheel){
+    readWheelPosition(wheel) {
         
         return this.rem.getWheel(wheel,'position');
        
-    },
+    }
 
-    readWheelSpeed: function(wheel){
+    readWheelSpeed(wheel) {
         return this.rem.getWheel(wheel,'speed');
 
-    },
+    }
 
-    readPanPosition : function(){
+    readPanPosition() {
         return this.rem.getPan();
-    },
+    }
 
-    readTiltPosition : function(){
+    readTiltPosition() {
         return this.rem.getTilt();
-    },
+    }
 
-    readIRSensor : function(sensor){
+    readIRSensor(sensor) {
         return this.rem.getIRValue(sensor);
-    },
-    
-    readAllIRSensor : function(){
+    }
+
+    readAllIRSensor() {
         return {
             BackR: this.rem.getIRValue('Back-R'),
             BackC: this.rem.getIRValue('Back-C'),
@@ -182,48 +181,48 @@ Robobo.prototype = {
             
         }
         
-    },
+    }
 
-    readBatteryLevel : function(device){
+    readBatteryLevel(device) {
         if (device == 'base'){
             return this.rem.checkBatt();
         }else{
             return this.rem.checkOboBatt();
         }
-    },
+    }
 
-    readFaceSensor : function(){
+    readFaceSensor() {
         return {
             distance : this.rem.getFaceDist(),
             x : this.rem.getFaceCoord('x'),
             y : this.rem.getFaceCoord('y')
         }
-    },
+    }
 
-    resetFaceSensor : function (){
+    resetFaceSensor() {
         this.rem.resetFaceSensor();
-    },
+    }
 
-    readClapCounter : function () {
+    readClapCounter() {
         return this.rem.getClaps();
-    },
+    }
 
-    resetClapCounter : function() {
+    resetClapCounter() {
         this.rem.resetClapSensor();
-    },
+    }
 
-    readLastNote : function(){
+    readLastNote() {
         return {
             note : this.rem.getLastNote(),
             duration : this.rem.getLastNoteDuration()
         }
-    },
+    }
 
-    resetLastNote : function(){
+    resetLastNote() {
         this.rem.resetNoteSensor();
-    },
+    }
 
-    readColorBlob : function(color){
+    readColorBlob(color) {
         return {
             
             x: this.rem.getBlobCoord(color,'x'),
@@ -231,97 +230,98 @@ Robobo.prototype = {
             area: this.rem.getBlobSize(color),
         }
 
-    },
+    }
 
-    readAllColorBlobs : function(){
+    readAllColorBlobs() {
         return{
             red : this.readColorBlob('red'),
             green : this.readColorBlob('green'),
             blue : this.readColorBlob('blue'),
             custom : this.readColorBlob('custom'), 
         }
-    },
+    }
 
-    resetColorBlobs : function(){
+    resetColorBlobs() {
         this.rem.resetBlobSensor();
-    },
+    }
 
-    setColorBlobDetectionActive : function(red, green, blue, custom){
+    setColorBlobDetectionActive(red, green, blue, custom) {
         this.rem.configureBlobDetection(red,green,blue,custom);
-    },
+    }
 
-    readFlingSensor : function(){
+    readFlingSensor() {
         return this.rem.checkFlingAngle();
-    },
+    }
 
-    resetFlingSensor : function(){
+    resetFlingSensor() {
         this.rem.resetFlingSensor();
-    },
+    }
 
-    readTapSensor : function(){
+    readTapSensor() {
         return {
             x: this.rem.getTapCoord('x'),
             y: this.rem.getTapCoord('y'),
             zone: this.rem.getTapZone()
         }
-    },
+    }
 
-    resetTapSensor : function(){
+    resetTapSensor() {
         this.rem.resetTapSensor();
-    },
+    }
 
-    readOrientationSensor : function(){
+    readOrientationSensor() {
         return {
             x: this.rem.getOrientation('x'),
             y: this.rem.getOrientation('y'),
             z: this.rem.getOrientation('z')
         }
-    },
-    
-    readAccelerationSensor : function(){
+    }
+
+    readAccelerationSensor() {
         return {
             x: this.rem.getAcceleration('x'),
             y: this.rem.getAcceleration('y'),
             z: this.rem.getAcceleration('z')
         }
-    },
+    }
 
-    readBrightnessSensor : function(){
+    readBrightnessSensor() {
         return this.rem.getLightBrightness();
-    },
+    }
 
-    update : async function (){
+    async update() {
         return this.pause(0.01);
         
-    },
+    }
 
-
-
-    pause : async function (time){
+    async pause(time) {
         return new Promise(r => setTimeout(r, time));
 
-    },
+    }
 
-    whenANoteIsDetected : function(fun){
+    whenANoteIsDetected(fun) {
         this.rem.registerCallback("onNewNote",fun);
-    },
-    whenANewFaceIsDetected : function(fun){
+    }
+
+    whenANewFaceIsDetected(fun) {
         this.rem.registerCallback("onNewFace",fun);
-    },
-    whenAFaceIsLost : function(fun){
+    }
+
+    whenAFaceIsLost(fun) {
         this.rem.registerCallback("onLostFace",fun);
-    },
+    }
 
-    whenANewColorBlobIsDetected : function(fun){
+    whenANewColorBlobIsDetected(fun) {
         this.rem.registerCallback("onNewBlob",fun);
-    },
-    whenATapIsDetected : function(fun){
+    }
+
+    whenATapIsDetected(fun) {
         this.rem.registerCallback("onNewTap",fun);
-    },
+    }
 
-    whenAFlingIsDetected : function(fun){
+    whenAFlingIsDetected(fun) {
         this.rem.registerCallback("onNewFling",fun);
-    },
-
+    }
 }
+
 module.exports = Robobo;

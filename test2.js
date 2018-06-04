@@ -55,23 +55,22 @@ async function main(){
 
     //robobo.moveWheelsByTime(30,30,10);
     //
+    robobo.setEmotionTo('surprised');
+    
     robobo.moveWheelsByDegrees('both',900,100);
-    robobo.moveWheelsByTime(30,30,10);
+    robobo.moveWheelsByTime(30,30,2);
     robobo.playSound('moan');
 
     robobo.moveWheelsByDegrees('both',900,-100);
 
-    robobo.log('AJKJKJKASKDJAKDSGBKSGDkLV');
-    robobo.movePanTo(40,10);
-    robobo.pause(5);
+    robobo.movePanTo(40,10,true);
     robobo.playSound('moan');
+    robobo.setEmotionTo('normal')
+    robobo.movePanTo(0,10, true);
+    robobo.movePanTo(-40,10, true);
 
-    robobo.movePanTo(180,10);
-    robobo.movePanTo(220,10);
-
-    robobo.moveTiltTo(120,10);
-    console.log("pepeaasegvadsbadfb");
-
+    robobo.moveTiltTo(120,10,true);
+    
 
 
 console.log('EOF');
