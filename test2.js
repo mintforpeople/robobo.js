@@ -1,4 +1,6 @@
 async function main(){
+    console.log("pepedentro");
+
     var Robobo = require('./robobo');
 
     robobo = new Robobo('192.168.0.253');
@@ -47,32 +49,41 @@ async function main(){
   robobo.moveWheelsByTime(-30,-30,1);
   console.log('DESPUES');
 */
-/*
-    robobo.sayText('AYAYAYAAYAY');
 
 
-    await robobo.sayText('Hola mundo');
 
 
-    robobo.moveWheelsByTime(30,30,1000);
-    console.log('DESPUES');
-    await robobo.pause(0.2);
-    robobo.moveWheelsByTime(-30,-30,100);
-    await robobo.pause(0.2);
+    //robobo.moveWheelsByTime(30,30,10);
+    //
+    robobo.moveWheelsByDegrees('both',900,100);
+    robobo.moveWheelsByTime(30,30,10);
+    robobo.playSound('moan');
 
-    await     robobo.moveWheelsByTime(-30,-30,1);
+    robobo.moveWheelsByDegrees('both',900,-100);
+
+    robobo.log('AJKJKJKASKDJAKDSGBKSGDkLV');
+    robobo.movePanTo(40,10);
+    robobo.pause(5);
+    robobo.playSound('moan');
+
+    robobo.movePanTo(180,10);
+    robobo.movePanTo(220,10);
+
+    robobo.moveTiltTo(120,10);
+    console.log("pepeaasegvadsbadfb");
 
 
-console.log('DESPUES');
-*/
 
-while (true){
+console.log('EOF');
+
+
+/*while (true){
     console.log(robobo.readAllIRSensor());
     await robobo.pause(0.5);
-}
-
-
+}*/
 }
 main()
+console.log("pepefuera");
+
 
  

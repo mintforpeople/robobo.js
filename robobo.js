@@ -7,7 +7,6 @@ function Robobo(ip){
         console.log('Connection State: '+arg);
         this.connectionState = arg}.bind(this))
 
-    this.unlock = false;
     this.unlockFunction = function(){  }.bind(this);
 
     this.rem.registerCallback('talkCallback',this.unlockFunction);
@@ -55,6 +54,7 @@ Robobo.prototype = {
 
     },
     moveWheelsByTime : async function(speedR, speedL, time){
+        console.log('MOVEWHEELS')
         let unlock = false
         if (time == undefined){
             this.rem.moveWheelsSeparated(speedR, speedL, 2147483647);
@@ -81,32 +81,34 @@ Robobo.prototype = {
 
     },
 
-    movePanTo : async function(position,speed){
-        let unlock = false
-        this.rem.movePanWait(position,speed,()=>(unlock = true))
-        while (!unlock){
-            await this.update()
+    movePanTo : async function(position,speed,blocking){
+        if ((blocking == undefined)||(blocking == false)){
+            let unlock = false
+            this.rem.movePanWait(position,speed,()=>(unlock = true))
+            while (!unlock){
+                await this.update()
+            }
+            unlock=false;
         }
-        unlock=false;
+        else {
+            this.rem.movePan(position,speed);
+        }
+
 
     },
-    sayText : async function(text){
-        let unlock = false
-        this.rem.talk(text,()=>(unlock = true));
-        while (!unlock){
-            await this.update()
-        }
-        console.log('desbloqueo')
-        unlock=false;
-    },
+    
+    moveTiltTo : async function(position,speed,blocking){
+        if ((blocking == undefined)||(blocking == false)){
 
-    moveTiltTo : async function(position,speed){
-        let unlock = false
-        this.rem.moveTiltWait(position,speed,()=>(unlock = true))
-        while (!unlock){
-            await this.update()
+            let unlock = false
+            this.rem.moveTiltWait(position,speed,()=>(unlock = true))
+            while (!unlock){
+                await this.update()
+            }
+            unlock=false;
+        }else {
+            this.rem.moveTilt(position,blocking)
         }
-        unlock=false;
 
     },
 
@@ -118,11 +120,24 @@ Robobo.prototype = {
         this.rem.changeEmotion(emotion);
     },
 
+    sayText : async function(text){
+        let unlock = false
+        this.rem.talk(text,()=>(unlock = true));
+        while (!unlock){
+            await this.update()
+        }
+        unlock=false;
+    },
+
 
 
     playSound :  function(sound){
         this.rem.playEmotionSound(sound);
         
+    },
+
+    log : function(text){
+        console.log(text)
     },
 
     playNote : async function(note, time){
@@ -276,21 +291,15 @@ Robobo.prototype = {
     },
 
     update : async function (){
-        let wait = new Promise(function(resolve,reject){
-        setTimeout(() => {
-        resolve(1)},10);
-        });
-        let result = await wait;
+        return this.pause(0.01);
+        
     },
 
 
 
     pause : async function (time){
-        let wait = new Promise(function(resolve,reject){
-        setTimeout(() => {
-        resolve(1)},time*1000);
-        });
-        let result = await wait;
+        return new Promise(r => setTimeout(r, time));
+
     },
 
     whenANoteIsDetected : function(fun){

@@ -47,6 +47,8 @@ function Remote(ip,passwd){
   //Map of callbacks registered by the extension
   this.callbackmap = new Map();
 
+  this.wheelsCallbackMap = new Map();
+
   //Map of blocking callbacks
   //this.blockingcallbackmap = new Map();
 
@@ -95,7 +97,7 @@ function Remote(ip,passwd){
   this.lostFace = true;
 
 
-  this.timeout = 100;
+  this.timeout = 10;
   this.wheelLastTime = Date.now();
   this.panLastTime = Date.now();
   this.tiltLastTime = Date.now();
@@ -318,7 +320,8 @@ Remote.prototype = {
       this.wheelLastTime = Date.now();
       this.lastblock = this.lastblock+1;    
       lb = this.lastblock;
-      this.wheelsCallback = callback;
+      this.wheelsCallbackMap.set(this.lastblock+'',callback);
+
       
       var message = JSON.stringify({
           "name": "MOVEBY-DEGREES",
@@ -331,6 +334,9 @@ Remote.prototype = {
           "id": this.commandid
       });
       this.sendMessage(message);
+    }else{
+      console.warn('Robobo Warning: Ignored moveWheelsByDegree command. Maybe the client is sending messages too fast?');
+      callback();
     }
     
     //ENDOF moveWheelsByDegree
@@ -389,11 +395,11 @@ Remote.prototype = {
 
       this.lastblock = this.lastblock+1;
       //this.blockingcallbackmap.set(this.lastblock+"",callback);
-      if (this.wheelsCallback != undefined){
-        this.wheelsCallback();
-      }
+      /*if (this.wheelsCallback != undefined){
+        this.wheelsCallbackMap.set(id,callback);
+      }*/
 
-      this.wheelsCallback = callback;
+      this.wheelsCallbackMap.set(this.lastblock+'',callback);
       var message = JSON.stringify({
           "name": "MOVE-BLOCKING",
           "parameters": {
@@ -405,6 +411,10 @@ Remote.prototype = {
           "id": this.commandid
       });
       this.sendMessage(message);
+    }else{
+      console.warn('Robobo Warning: Ignored moveWheelsByTime command. Maybe the client is sending messages too fast?');
+
+      callback();
     }
 
   },//ENDOF moveWheelsSeparatedWait
@@ -518,6 +528,9 @@ Remote.prototype = {
       //  this.statusmap.set("panPos",pos);
       //}
       this.sendMessage(message);
+    }else{
+      console.warn('Robobo Warning: Ignored movePan command. Maybe the client is sending messages too fast?');
+      callback();
     }
 
   },//ENDOF movePanWait
@@ -617,6 +630,9 @@ Remote.prototype = {
       //  this.statusmap.set("tiltPos",parseInt(pos));
       //}
       this.sendMessage(message);
+    }else{
+      console.warn('Robobo Warning: Ignored moveTilt command. Maybe the client is sending messages too fast?');
+      callback();
     }
 
   },//ENDOF moveTiltWait
@@ -1350,8 +1366,9 @@ Remote.prototype = {
     else if (msg.name == "UNLOCK-MOVE") {
       console.log('UNLOCK-MOVE '+msg.value['blockid']);
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
-      this.wheelsCallback();
-      this.wheelsCallback = undefined;
+      this.wheelsCallbackMap.get(msg.value['blockid'])();
+      this.wheelsCallbackMap.delete(msg.value['blockid']);
+
     }
     else if (msg.name == "UNLOCK-TILT") {
       console.log('UNLOCK-TILT '+msg.value['blockid']);
@@ -1368,8 +1385,8 @@ Remote.prototype = {
     else if (msg.name == "UNLOCK-DEGREES") {
       console.log("UNLOCK-DEGREES"+msg.value['blockid']);
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
-      this.degreesCallback();
-      this.degreesCallback = undefined;
+      this.wheelsCallbackMap.get(msg.value['blockid'])();
+      this.wheelsCallbackMap.delete(msg.value['blockid']);
     }
     else if (msg.name == "PAN") {
       //console.log("PAN "+msg.value['panPos']);
