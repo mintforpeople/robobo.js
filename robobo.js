@@ -145,7 +145,7 @@ class Robobo {
      * @param {integer} position Position in degress of the TILT [5..105]
      * @param {integer} speed  Speed factor [-100..100]
      */
-    async moveTiltTo(position, speed, blocking) {
+    async moveTiltToBLK(position, speed, blocking) {
         let unlock = false
         this.rem.moveTiltWait(position,speed,()=>(unlock = true))
         while (!unlock){
