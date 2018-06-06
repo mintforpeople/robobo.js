@@ -6,7 +6,7 @@ class Robobo {
     /** Creates a new Robobo library instance.
      *  
      * @constructor
-     * @param {string} ip  - The IP address of the Robobo robot
+     * @param {string} ip The IP address of the Robobo robot
      */
     constructor(ip) {
         this.connectionState = 0;
@@ -67,8 +67,8 @@ class Robobo {
 
     /** Starts moving the wheels of the robot at the specified speed.
      * 
-     * @param {integer} speedR - Speed factor for the right wheel [-100 - 100]
-     * @param {integer} speedL - Speed factor for the right wheel [-100 - 100]
+     * @param {integer} speedR Speed factor for the right wheel [-100 - 100]
+     * @param {integer} speedL Speed factor for the right wheel [-100 - 100]
     */
     moveWheels(speedR, speedL) {
         this.rem.moveWheelsSeparated(speedR, speedL, 2147483647);
@@ -78,9 +78,9 @@ class Robobo {
      * This functions is blocking, it doesn't returns the control until the movement
      * is finished.
      * 
-     * @param {integer} speedR - Speed factor for the right wheel [-100..100]
-     * @param {integer} speedL - Speed factor for the right wheel [-100..100]
-     * @param {integer} time - Time duration of the movement in seconds
+     * @param {integer} speedR Speed factor for the right wheel [-100..100]
+     * @param {integer} speedL Speed factor for the right wheel [-100..100]
+     * @param {integer} time Time duration of the movement in seconds
      */
     async moveWheelsByTimeBLK(speedR, speedL, time) {
         let unlock = false
@@ -108,8 +108,8 @@ class Robobo {
 
     /** Moves the PAN of the base to the specified position at the specified speed
      * 
-     * @param {integer} position - Position in degress of the PAN [-160..160]
-     * @param {integer} speed  - Speed factor [-100..100]
+     * @param {integer} position Position in degress of the PAN [-160..160]
+     * @param {integer} speed  Speed factor [-100..100]
      */
     movePanTo(position, speed) {
         this.rem.movePan(position,speed);
@@ -118,8 +118,8 @@ class Robobo {
     /** Moves the PAN of the base to the specified position at the specified speed and
      * waits until the movement has finished.
      * 
-     * @param {integer} position - Position in degress of the TILT [-160..160]
-     * @param {integer} speed  - Speed factor [-100..100]
+     * @param {integer} position Position in degress of the TILT [-160..160]
+     * @param {integer} speed  Speed factor [-100..100]
      */
     async movePanToBLK(position, speed) {
         let unlock = false
@@ -142,8 +142,8 @@ class Robobo {
     /** Moves the TILT of the base to the specified position at the specified speed and
      * waits until the movement has finished.
      * 
-     * @param {integer} position - Position in degress of the TILT [5..105]
-     * @param {integer} speed  - Speed factor [-100..100]
+     * @param {integer} position Position in degress of the TILT [5..105]
+     * @param {integer} speed  Speed factor [-100..100]
      */
     async moveTiltTo(position, speed, blocking) {
         let unlock = false
@@ -157,8 +157,8 @@ class Robobo {
 
     /** Changes the color of a LED of the base
      * 
-     * @param {string} led - The ID of the led ['Front-C','Front-L','Front-LL','Front-R','Front-RR','Back-L','Back-R','all']
-     * @param {string} color - The new color ['off','white','red','blue','cyan','magenta','yellow','green','orange']
+     * @param {string} led The ID of the led ['Front-C','Front-L','Front-LL','Front-R','Front-RR','Back-L','Back-R','all']
+     * @param {string} color The new color ['off','white','red','blue','cyan','magenta','yellow','green','orange']
      */
     setLedColorTo(led, color) {
         this.rem.setLedColor(`${led}`,color);
@@ -166,7 +166,7 @@ class Robobo {
 
     /** Changes the emotion of showed by the face of Robobo
      *  
-     * @param {string} emotion - ['happy','laughing','surprised','sad','angry','normal','sleeping','tired','afraid']
+     * @param {string} emotion One of ['happy','laughing','surprised','sad','angry','normal','sleeping','tired','afraid']
      */
     setEmotionTo(emotion) {
         this.rem.changeEmotion(emotion);        
@@ -174,7 +174,7 @@ class Robobo {
 
     /** Commands the robot say the specified text 
      * 
-     * @param {string} text - The text to say
+     * @param {string} text The text to say
      */
      sayText(text) {
         let unlock = false
@@ -184,7 +184,7 @@ class Robobo {
     /** Commands the robot say the specified text and waits until the 
      * robots finishes reading the text
      * 
-     * @param {string} text - The text to say
+     * @param {string} text The text to say
      */
     async sayTextBLK(text) {
         let unlock = false
@@ -197,7 +197,7 @@ class Robobo {
 
     /** Commands the robot to play the specified emotion sound
      * 
-     * @param {string} sound - One of ['moan','purr',"angry","approve","disapprove","discomfort","doubtful","laugh","likes","mumble","ouch","thinking","various"]
+     * @param {string} sound One of ['moan','purr',"angry","approve","disapprove","discomfort","doubtful","laugh","likes","mumble","ouch","thinking","various"]
      */
     playSound(sound) {
         this.rem.playEmotionSound(sound);    
@@ -205,8 +205,8 @@ class Robobo {
 
     /** Commands the robot to play a musical note
      *  
-     * @param {integer} note - Musical note index [48..72]. Anglo-Saxon notation is used and there are 25 possible notes with the following basic correspondence. Any integer between 48 and 72.
-     * @param {integer} time - Duration of the note in seconds (decimals can be used to used, like 0.2 or 0.5) 
+     * @param {integer} note Musical note index [48..72]. Anglo-Saxon notation is used and there are 25 possible notes with the following basic correspondence. Any integer between 48 and 72.
+     * @param {integer} time Duration of the note in seconds (decimals can be used to used, like 0.2 or 0.5) 
      */
     playNote(note, time) {
         this.rem.playNote(note,time*1000); //the Robobo remote expects millis        
@@ -214,8 +214,8 @@ class Robobo {
     
     /** Commands the robot to play a musical note and wait until finishes playing it
      *  
-     * @param {integer} note - Musical note index [48..72]. Anglo-Saxon notation is used and there are 25 possible notes with the following basic correspondence. Any integer between 48 and 72.
-     * @param {float} time - Duration of the note in seconds (decimals can be used to used, like 0.2 or 0.5) 
+     * @param {integer} note Musical note index [48..72]. Anglo-Saxon notation is used and there are 25 possible notes with the following basic correspondence. Any integer between 48 and 72.
+     * @param {float} time Duration of the note in seconds (decimals can be used to used, like 0.2 or 0.5) 
      */
     async playNoteBLK(note, time) {
         this.rem.playNote(note,time*1000); //the Robobo remote expects millis
@@ -234,7 +234,7 @@ class Robobo {
 
     /** Returns the current speed of the wheel
      *  
-     * @param {string} wheel - One of [left, right]
+     * @param {string} wheel One of [left, right]
      * @returns the current speed of the wheel in degress
      */
     readWheelSpeed(wheel) {
@@ -259,7 +259,7 @@ class Robobo {
 
     /** Returns the current value sensed by the specified IR
      *  
-     * @param {string} sensor - One of ['Front-C','Front-L','Front-LL','Front-R','Front-RR','Back-C','Back-L','Back-R'] 
+     * @param {string} sensor One of ['Front-C','Front-L','Front-LL','Front-R','Front-RR','Back-C','Back-L','Back-R'] 
      * @returns {integer} the current value of the IR
      */
     readIRSensor(sensor) {
@@ -290,7 +290,7 @@ class Robobo {
 
     /** Returns the battery level of the base or the smartphone
      *  
-     * @param {string} device - One of 'base' or 'smartphone'
+     * @param {string} device One of 'base' or 'smartphone'
      * @returns {integer} the battery level of the base or the smartphone
      */
     readBatteryLevel(device) {
