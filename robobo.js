@@ -2,9 +2,16 @@ var Remote = require('./remote-library/remotelib');
 
 
 class Robobo {
+
+    /** Creates a new Robobo library instance.
+     *  
+     * @constructor
+     * @param {string} ip  - The IP address of the Robobo robot
+     */
     constructor(ip) {
         this.connectionState = 0;
-        this.rem = new Remote(ip.trim(),'');
+        this.ip = ip.trim();
+        this.rem = new Remote(this.ip,'');
         this.rem.registerCallback('onConnectionChanges', arg => {
             console.log('Connection State: '+arg);
             this.connectionState = arg})
@@ -26,102 +33,161 @@ class Robobo {
 
     }
 
+
+    /** Establishes a remote connection with the Robobo indicated by
+     * the IP address associated to this instance.    
+     */
     async connect() {
         this.rem.connect();
         while (this.rem.connectionState == Remote.ConnectionStateEnum.CONNECTING) {
              await this.update();
-
-
         }
-        console.log('Post Connect');
 
-        
+        console.log('ROBOBO: Connected to robot at '+this.ip);
     }
 
+
+    /** Disconnects the library from the Robobo robot
+     * 
+     */
     async disconnect() {
         this.rem.closeConnection(false);
         while (this.rem.connectionState != Remote.ConnectionStateEnum.DISCONNECTED) {
              await this.update();
 
         }
-        console.log('Post Disconnect');
+        console.log('ROBOBO: Disconnected from '+this.ip);
     }
 
+    /** Stops the movement of the wheels
+     */
     stopMotors() {
         this.rem.moveWheelsSeparated(0,0,0);
-
     }
 
-    async moveWheelsByTime(speedR, speedL, time) {
-        console.log('MOVEWHEELS')
+
+    /** Starts moving the wheels of the robot at the specified speed.
+     * 
+     * @param {integer} speedR - Speed factor for the right wheel [-100 - 100]
+     * @param {integer} speedL - Speed factor for the right wheel [-100 - 100]
+    */
+    moveWheels(speedR, speedL) {
+        this.rem.moveWheelsSeparated(speedR, speedL, 2147483647);
+    }
+
+    /** Moves the wheels of the robot at the specified speeds during the specified time.
+     * This functions is blocking, it doesn't returns the control until the movement
+     * is finished.
+     * 
+     * @param {integer} speedR - Speed factor for the right wheel [-100..100]
+     * @param {integer} speedL - Speed factor for the right wheel [-100..100]
+     * @param {integer} time - Time duration of the movement in seconds
+     */
+    async moveWheelsByTimeBLK(speedR, speedL, time) {
         let unlock = false
-        if (time == undefined){
-            this.rem.moveWheelsSeparated(speedR, speedL, 2147483647);
-        }else{
-            
-            this.rem.moveWheelsSeparatedWait(speedR, speedL, time,()=>(unlock = true));
-            while (!unlock){
-                 await this.update()
-            }
-
-            unlock=false;
+        this.rem.moveWheelsSeparatedWait(speedR, speedL, time,()=>(unlock = true));
+        while (!unlock){
+                await this.update()
         }
-        
-
+        unlock = false;
     }
 
-    async moveWheelsByDegrees(wheel, degrees, speed) {
+    /** Moves the wheels of the robot by some degress at the specified speed.
+     * 
+     * @param {string} wheel - Wheels to move [left | right | both]
+     * @param {integer} degrees - Degress to move the wheel
+     * @param {integer} speed  - Speed factor [-100..100]
+     */
+    async moveWheelsByDegreesBLK(wheel, degrees, speed) {
         let unlock = false
         this.rem.moveWheelsByDegree(wheel,degrees,speed,()=>(unlock = true))
         while (!unlock){
             await this.update()
         }
         unlock=false;
-
     }
 
-    async movePanTo(position, speed, blocking) {
-        if ((blocking == undefined)||(blocking == false)){
-            this.rem.movePan(position,speed);
-
-        }
-        else {
-            let unlock = false
-            this.rem.movePanWait(position,speed,()=>(unlock = true))
-            while (!unlock){
-                await this.update()
-            }
-            unlock=false;
-        }
-
-
+    /** Moves the PAN of the base to the specified position at the specified speed
+     * 
+     * @param {integer} position - Position in degress of the PAN [-160..160]
+     * @param {integer} speed  - Speed factor [-100..100]
+     */
+    movePanTo(position, speed) {
+        this.rem.movePan(position,speed);
     }
 
+    /** Moves the PAN of the base to the specified position at the specified speed and
+     * waits until the movement has finished.
+     * 
+     * @param {integer} position - Position in degress of the TILT [-160..160]
+     * @param {integer} speed  - Speed factor [-100..100]
+     */
+    async movePanToBLK(position, speed) {
+        let unlock = false
+        this.rem.movePanWait(position,speed,()=>(unlock = true))
+        while (!unlock){
+            await this.update()
+        }
+        unlock=false;
+    }
+
+    /** Moves the TILT of the base to the specified position at the specified speed
+     * 
+     * @param {integer} position - Position in degress of the PAN [5..105]
+     * @param {integer} speed  - Speed factor [-100..100]
+     */
+    moveTiltTo(position, speed) {
+        this.rem.moveTilt(position, speed)
+    }
+
+    /** Moves the TILT of the base to the specified position at the specified speed and
+     * waits until the movement has finished.
+     * 
+     * @param {integer} position - Position in degress of the TILT [5..105]
+     * @param {integer} speed  - Speed factor [-100..100]
+     */
     async moveTiltTo(position, speed, blocking) {
-        if ((blocking == undefined)||(blocking == false)){
-
-            this.rem.moveTilt(position,blocking)
-
-        }else {
-            let unlock = false
-            this.rem.moveTiltWait(position,speed,()=>(unlock = true))
-            while (!unlock){
-               await this.update()
-            }
-            unlock=false;
+        let unlock = false
+        this.rem.moveTiltWait(position,speed,()=>(unlock = true))
+        while (!unlock){
+            await this.update()
         }
-
+        unlock=false;
     }
 
+    /** Changes the color of a LED of the base
+     * 
+     * @param {string} led - The ID of the led ['Front-C','Front-L','Front-LL','Front-R','Front-RR','Back-L','Back-R','all']
+     * @param {string} color - The new color ['off','white','red','blue','cyan','magenta','yellow','green','orange']
+     */
     setLedColorTo(led, color) {
         this.rem.setLedColor(`${led}`,color);
     }
 
+    /** Changes the emotion of showed by the face of Robobo
+     *  
+     * @param {string} emotion - ['happy','laughing','surprised','sad','angry','normal','sleeping','tired','afraid']
+     */
     setEmotionTo(emotion) {
-        this.rem.changeEmotion(emotion);
+        this.rem.changeEmotion(emotion);        
     }
 
-    async sayText(text) {
+
+    /** Commands the robot say the specified text 
+     * 
+     * @param {string} text - The text to say
+     */
+     sayText(text) {
+        let unlock = false
+        this.rem.talk(text,()=>(unlock = false));
+    }
+
+    /** Commands the robot say the specified text and waits until the 
+     * robots finishes reading the text
+     * 
+     * @param {string} text - The text to say
+     */
+    async sayTextBLK(text) {
         let unlock = false
         this.rem.talk(text,()=>(unlock = true));
         while (!unlock){
@@ -130,29 +196,59 @@ class Robobo {
         unlock=false;
     }
 
+
+    /** Commands the robot to play the specified emotion sound
+     * 
+     * @param {string} sound - One of ['moan','purr',"angry","approve","disapprove","discomfort","doubtful","laugh","likes","mumble","ouch","thinking","various"]
+     */
     playSound(sound) {
-        this.rem.playEmotionSound(sound);
-        
+        this.rem.playEmotionSound(sound);    
     }
 
+    /** Writes the specified text in the Robobo log (console by default)
+     * 
+     * @param {string} text - The text to log
+     */
     log(text) {
         console.log(text);
     }
 
-    async playNote(note, time) {
-        this.rem.playNote(note,time);
+    /** Commands the robot to play a musical note
+     *  
+     * @param {integer} note - Musical note index [48..72]. Anglo-Saxon notation is used and there are 25 possible notes with the following basic correspondence. Any integer between 48 and 72.
+     * @param {integer} time - Duration of the note in seconds (decimals can be used to used, like 0.2 or 0.5) 
+     */
+    playNote(note, time) {
+        this.rem.playNote(note,time*1000); //the Robobo remote expects millis        
+    }
+    
+    /** Commands the robot to play a musical note and wait until finishes playing it
+     *  
+     * @param {integer} note - Musical note index [48..72]. Anglo-Saxon notation is used and there are 25 possible notes with the following basic correspondence. Any integer between 48 and 72.
+     * @param {float} time - Duration of the note in seconds (decimals can be used to used, like 0.2 or 0.5) 
+     */
+    async playNoteBLK(note, time) {
+        this.rem.playNote(note,time*1000); //the Robobo remote expects millis
         await this.pause(time);
     }
 
+
+    /** Returns the position of the wheel in degrees
+     *  
+     * @param {string} wheel - One of [left, right]
+     * @returns the position of the wheel in degress
+     */
     readWheelPosition(wheel) {
-        
         return this.rem.getWheel(wheel,'position');
-       
     }
 
+    /** Returns the current speed of the wheel
+     *  
+     * @param {string} wheel - One of [left, right]
+     * @returns the current speed of the wheel in degress
+     */
     readWheelSpeed(wheel) {
         return this.rem.getWheel(wheel,'speed');
-
     }
 
     readPanPosition() {
@@ -289,14 +385,21 @@ class Robobo {
         return this.rem.getLightBrightness();
     }
 
+    /** Forces an update of the robot sensors.
+     * This functiona must be call any time the robot sensors are used in a conditional loop.
+     */
     async update() {
         return this.pause(0.01);
         
     }
 
+    /** Pauses the program for the specified time (in seconds)
+     * This functions requires 'await' to work properly
+     * 
+     * @param {float} time - Time in seconds (accepts decimals like 0.2)
+     */
     async pause(time) {
-        return new Promise(r => setTimeout(r, time));
-
+        return new Promise(r => setTimeout(r, time*1000));
     }
 
     whenANoteIsDetected(fun) {
