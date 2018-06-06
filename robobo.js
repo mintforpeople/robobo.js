@@ -46,7 +46,6 @@ class Robobo {
         console.log('ROBOBO: Connected to robot at '+this.ip);
     }
 
-
     /** Disconnects the library from the Robobo robot
      * 
      */
@@ -59,12 +58,12 @@ class Robobo {
         console.log('ROBOBO: Disconnected from '+this.ip);
     }
 
+
     /** Stops the movement of the wheels
      */
     stopMotors() {
         this.rem.moveWheelsSeparated(0,0,0);
     }
-
 
     /** Starts moving the wheels of the robot at the specified speed.
      * 
@@ -155,6 +154,7 @@ class Robobo {
         unlock=false;
     }
 
+
     /** Changes the color of a LED of the base
      * 
      * @param {string} led - The ID of the led ['Front-C','Front-L','Front-LL','Front-R','Front-RR','Back-L','Back-R','all']
@@ -171,7 +171,6 @@ class Robobo {
     setEmotionTo(emotion) {
         this.rem.changeEmotion(emotion);        
     }
-
 
     /** Commands the robot say the specified text 
      * 
@@ -196,21 +195,12 @@ class Robobo {
         unlock=false;
     }
 
-
     /** Commands the robot to play the specified emotion sound
      * 
      * @param {string} sound - One of ['moan','purr',"angry","approve","disapprove","discomfort","doubtful","laugh","likes","mumble","ouch","thinking","various"]
      */
     playSound(sound) {
         this.rem.playEmotionSound(sound);    
-    }
-
-    /** Writes the specified text in the Robobo log (console by default)
-     * 
-     * @param {string} text - The text to log
-     */
-    log(text) {
-        console.log(text);
     }
 
     /** Commands the robot to play a musical note
@@ -251,18 +241,40 @@ class Robobo {
         return this.rem.getWheel(wheel,'speed');
     }
 
+    /** Returns the current position of the PAN
+     * 
+     * @returns the current position of the pan
+     */
     readPanPosition() {
         return this.rem.getPan();
     }
 
+    /** Returns the current position of the TILT
+     * 
+     * @returns the current position of the TILT
+     */
     readTiltPosition() {
         return this.rem.getTilt();
     }
 
+    /** Returns the current value sensed by the specified IR
+     *  
+     * @param {string} sensor - One of ['Front-C','Front-L','Front-LL','Front-R','Front-RR','Back-C','Back-L','Back-R'] 
+     * @returns {integer} the current value of the IR
+     */
     readIRSensor(sensor) {
         return this.rem.getIRValue(sensor);
     }
 
+    /** Returns the values of all the IR sensors.
+     * 
+     * Example of use:
+     * let irs = readAllIRSensor();
+     * console.log(irs.BackR);
+     * console.log(irs.FrontRR);
+     * 
+     * @returns {integer} The values of all the IR sensors of the base
+     */
     readAllIRSensor() {
         return {
             BackR: this.rem.getIRValue('Back-R'),
@@ -273,12 +285,14 @@ class Robobo {
             FrontL: this.rem.getIRValue('Front-L'),
             FrontLL: this.rem.getIRValue('Front-LL'),
             BackL: this.rem.getIRValue('Back-L'),
-
-            
         }
-        
     }
 
+    /** Returns the battery level of the base or the smartphone
+     *  
+     * @param {string} device - One of 'base' or 'smartphone'
+     * @returns {integer} the battery level of the base or the smartphone
+     */
     readBatteryLevel(device) {
         if (device == 'base'){
             return this.rem.checkBatt();
@@ -287,6 +301,16 @@ class Robobo {
         }
     }
 
+    /** Returns the position and distance of the last face detected by the robot
+     * 
+     * Example of use:
+     * let face = robobo.readFaceSensor();
+     * console.log(face.distance); //the distance to the person
+     * console.log(face.x); //the position of the face in X axis
+     * console.log(fase.y); //the position of the face in Y axis
+     * 
+     * @returns the position and distance of the last face detected by the robot
+     */
     readFaceSensor() {
         return {
             distance : this.rem.getFaceDist(),
@@ -295,6 +319,10 @@ class Robobo {
         }
     }
 
+    /** Resets the face sensor.
+     * After this function, and until a new face is detected, the face sensor
+     * will return 0 as values for distance, x and y position.
+     */
     resetFaceSensor() {
         this.rem.resetFaceSensor();
     }
@@ -401,6 +429,15 @@ class Robobo {
     async pause(time) {
         return new Promise(r => setTimeout(r, time*1000));
     }
+
+    /** Writes the specified text in the Robobo log (console by default)
+     * 
+     * @param {string} text - The text to log
+     */
+    log(text) {
+        console.log(text);
+    }
+
 
     whenANoteIsDetected(fun) {
         this.rem.registerCallback("onNewNote",fun);
