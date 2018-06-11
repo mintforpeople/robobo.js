@@ -48,6 +48,8 @@ function Remote(ip,passwd){
   this.callbackmap = new Map();
 
   this.wheelsCallbackMap = new Map();
+  this.tiltCallbackMap = new Map();
+  this.panCallbackMap = new Map();
 
   //Map of blocking callbacks
   //this.blockingcallbackmap = new Map();
@@ -61,8 +63,6 @@ function Remote(ip,passwd){
   //Connection password
   this.password = passwd;
 
-  //Last block id
-  this.lastblock = 0;
 
   //Wheel stop callback
   this.wheelsCallback = undefined;
@@ -328,9 +328,8 @@ Remote.prototype = {
 
     if (this.filterMovement(speed,"wheels")){
       this.wheelLastTime = Date.now();
-      this.lastblock = this.lastblock+1;    
-      lb = this.lastblock;
-      this.wheelsCallbackMap.set(this.lastblock+'',callback);
+      
+      this.wheelsCallbackMap.set(this.commandid+'',callback);
 
       
       var message = JSON.stringify({
@@ -339,7 +338,7 @@ Remote.prototype = {
               wheel: wheel,
               degrees: degrees,
               speed:speed,
-              blockid:lb
+              blockid:this.commandid
           },
           "id": this.commandid
       });
@@ -403,20 +402,16 @@ Remote.prototype = {
       lS = ''+lSpeed;
       rS = ''+rSpeed;
 
-      this.lastblock = this.lastblock+1;
-      //this.blockingcallbackmap.set(this.lastblock+"",callback);
-      /*if (this.wheelsCallback != undefined){
-        this.wheelsCallbackMap.set(id,callback);
-      }*/
-
-      this.wheelsCallbackMap.set(this.lastblock+'',callback);
+      
+    
+      this.wheelsCallbackMap.set(this.commandid+'',callback);
       var message = JSON.stringify({
           "name": "MOVE-BLOCKING",
           "parameters": {
               lspeed: lS,
               rspeed: rS,
               time:time,
-              blockid: this.lastblock
+              blockid: this.commandid
           },
           "id": this.commandid
       });
@@ -516,21 +511,17 @@ Remote.prototype = {
       
 
 
-      this.lastblock = this.lastblock+1;
-      //this.blockingcallbackmap.set(this.lastblock+"",callback);
-      if (this.panCallback != undefined){
-        this.panCallback();
-      }
-      this.panCallback = callback;
+      this.panCallbackMap.set(this.commandid+'',callback);
 
-      lb = this.lastblock;
+
+      
 
       var message = JSON.stringify({
           "name": "MOVEPAN-BLOCKING",
           "parameters": {
               pos: pos,
               speed:s,
-              blockid:lb
+              blockid:this.commandid
           },
           "id": this.commandid
       });
@@ -620,19 +611,14 @@ Remote.prototype = {
         pos = this.tiltInferiorLimit;
       }
 
-      this.lastblock = this.lastblock+1;
-      //this.blockingcallbackmap.set(this.lastblock+"",callback);
-      if (this.tiltCallback != undefined){
-        this.tiltCallback();
-      }
-      this.tiltCallback = callback;
-      var lb = this.lastblock;
+      this.tiltCallbackMap.set(this.commandid+'',callback);
+
       var message = JSON.stringify({
           "name": "MOVETILT-BLOCKING",
           "parameters": {
               pos: pos,
               speed:s,
-              blockid:lb
+              blockid:this.commandid
           },
           "id": this.commandid
       });
@@ -1186,10 +1172,11 @@ Remote.prototype = {
   },
 
   callCallback : function(callbackName) {
+    
     if (this.callbackmap.get(callbackName) != null) {
       this.callbackmap.get(callbackName)();
     }else{
-      console.log('Bad callback call on '+callbackname);
+      console.log('Bad callback call on '+callbackName);
     }
   },
 
@@ -1380,40 +1367,43 @@ Remote.prototype = {
       this.callCallback("onError");
     }
     else if (msg.name == "ONPHRASE") {
-      console.log('ONPHRASE '+msg.value['text']);
+      //console.log('ONPHRASE '+msg.value['text']);
       if (!!this.callbackmap.get("onPhrase")){
         (this.callbackmap.get("onPhrase"))(msg.value['text']);
       }
     }
     else if (msg.name == "UNLOCK-MOVE") {
-      console.log('UNLOCK-MOVE '+msg.value['blockid']);
+      //console.log('UNLOCK-MOVE '+msg.value['blockid']);
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
-      this.wheelsCallbackMap.get(msg.value['blockid'])();
-      this.wheelsCallbackMap.delete(msg.value['blockid']);
-
+      if(!!this.wheelsCallbackMap.get(msg.value['blockid'])){
+        this.wheelsCallbackMap.get(msg.value['blockid'])();
+        this.wheelsCallbackMap.delete(msg.value['blockid']);
+      }else{
+        console.log('Bad callback call on UNLOCK-MOVE');
+      }
     }
     else if (msg.name == "UNLOCK-TILT") {
-      console.log('UNLOCK-TILT '+msg.value['blockid']);
+      //console.log('UNLOCK-TILT '+msg.value['blockid']);
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
-      if(!!this.tiltCallback){
-      this.tiltCallback();
+      if(!!this.tiltCallbackMap.get(msg.value['blockid'])){
+        this.tiltCallbackMap.get(msg.value['blockid'])();
+        this.tiltCallbackMap.delete(msg.value['blockid']);
       }else{
         console.log('Bad callback call on UNLOCK-TILT');
       }
-      this.tiltCallback = undefined;
     }
     else if (msg.name == "UNLOCK-PAN") {
-      console.log('UNLOCK-PAN '+msg.value['blockid']);
+      //console.log('UNLOCK-PAN '+msg.value['blockid']);
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
-      if(!!this.panCallback){
-        this.panCallback();
-        }else{
-          console.log('Bad callback call on UNLOCK-PAN');
-        }
-              this.panCallback = undefined;
+      if(!!this.panCallbackMap.get(msg.value['blockid'])){
+        this.panCallbackMap.get(msg.value['blockid'])();
+        this.panCallbackMap.delete(msg.value['blockid']);
+      }else{
+        console.log('Bad callback call on UNLOCK-PAN');
+      }
     }
     else if (msg.name == "UNLOCK-DEGREES") {
-      console.log("UNLOCK-DEGREES"+msg.value['blockid']);
+      //console.log("UNLOCK-DEGREES"+msg.value['blockid']);
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
       if(!!this.wheelsCallbackMap.get(msg.value['blockid'])){
         this.wheelsCallbackMap.get(msg.value['blockid'])();
@@ -1442,7 +1432,7 @@ Remote.prototype = {
     }
 
     else if (msg.name == "NOTE") {
-      console.log(msg.value['name']+'  '+msg.value['index']+'  '+msg.value['octave']);
+      //console.log(msg.value['name']+'  '+msg.value['index']+'  '+msg.value['octave']);
       this.statusmap.set("lastNote",msg.value['name']);
       this.statusmap.set("lastNoteDuration",msg.value['duration']);
       

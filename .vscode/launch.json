@@ -4,11 +4,12 @@
     // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "node",
             "request": "launch",
-            "name": "Test 2",
-            "program": "${workspaceFolder}/test2.js"
+            "name": "Test",
+            "program": "${workspaceFolder}/test.js"
         }
     ]
 }
