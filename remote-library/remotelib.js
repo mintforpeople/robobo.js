@@ -1188,6 +1188,8 @@ Remote.prototype = {
   callCallback : function(callbackName) {
     if (this.callbackmap.get(callbackName) != null) {
       this.callbackmap.get(callbackName)();
+    }else{
+      console.log('Bad callback call on '+callbackname);
     }
   },
 
@@ -1307,6 +1309,8 @@ Remote.prototype = {
             //console.log("OnGap");
             if(!!this.callbackmap.get("onGap")){
             (this.callbackmap.get("onGap"))(key);
+            }else{
+              console.log('Bad callback call on GAPSTATUS');
             }
           }
 
@@ -1393,6 +1397,8 @@ Remote.prototype = {
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
       if(!!this.tiltCallback){
       this.tiltCallback();
+      }else{
+        console.log('Bad callback call on UNLOCK-TILT');
       }
       this.tiltCallback = undefined;
     }
@@ -1401,7 +1407,10 @@ Remote.prototype = {
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
       if(!!this.panCallback){
         this.panCallback();
-        }      this.panCallback = undefined;
+        }else{
+          console.log('Bad callback call on UNLOCK-PAN');
+        }
+              this.panCallback = undefined;
     }
     else if (msg.name == "UNLOCK-DEGREES") {
       console.log("UNLOCK-DEGREES"+msg.value['blockid']);
@@ -1409,6 +1418,8 @@ Remote.prototype = {
       if(!!this.wheelsCallbackMap.get(msg.value['blockid'])){
         this.wheelsCallbackMap.get(msg.value['blockid'])();
         this.wheelsCallbackMap.delete(msg.value['blockid']);
+      }else{
+        console.log('Bad callback call on UNLOCK-DEGREES');
       }
     }
     else if (msg.name == "PAN") {
