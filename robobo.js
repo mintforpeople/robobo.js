@@ -395,9 +395,9 @@ class Robobo {
 
     readOrientationSensor() {
         return {
-            x: this.rem.getOrientation('x'),
-            y: this.rem.getOrientation('y'),
-            z: this.rem.getOrientation('z')
+            yaw: this.rem.getOrientation('yaw'),
+            pitch: this.rem.getOrientation('pitch'),
+            roll: this.rem.getOrientation('roll')
         }
     }
 
