@@ -118,8 +118,8 @@ class Robobo {
     /** Moves the PAN of the base to the specified position at the specified speed and
      * waits until the movement has finished.
      * 
-     * @param {integer} position Position in degress of the TILT [-160..160]
-     * @param {integer} speed  Speed factor [-100..100]
+     * @param {integer} position Position in degress of the TILT [-170..170]
+     * @param {integer} speed  Speed factor [-40..40]
      */
     async movePanToBLK(position, speed) {
         let unlock = false
@@ -132,8 +132,8 @@ class Robobo {
 
     /** Moves the TILT of the base to the specified position at the specified speed
      * 
-     * @param {integer} position - Position in degress of the PAN [5..105]
-     * @param {integer} speed  - Speed factor [-100..100]
+     * @param {integer} position - Position in degress of the TILT [5..105]
+     * @param {integer} speed  - Speed factor [-10..10]
      */
     moveTiltTo(position, speed) {
         this.rem.moveTilt(position, speed)
@@ -525,7 +525,7 @@ class Robobo {
     /**
      * Configures the callback that is called when a new note is detected
      *
-     * @param {*} fun The callback to be called
+     * @param {Function} fun The callback to be called
      * @memberof Robobo
      */
     whenANoteIsDetected(fun) {
@@ -535,7 +535,7 @@ class Robobo {
     /**
      * Configures the callback that is called when a new face is detected
      *
-     * @param {*} fun The callback to be called
+     * @param {Function} fun The callback to be called
      * @memberof Robobo
      */
     whenANewFaceIsDetected(fun) {
@@ -544,7 +544,7 @@ class Robobo {
     /**
      * Configures the callback that is called when a face is lost
      *
-     * @param {*} fun The callback to be called
+     * @param {Function} fun The callback to be called
      * @memberof Robobo
      */
     whenAFaceIsLost(fun) {
@@ -554,7 +554,7 @@ class Robobo {
     /**
      * Configures the callback that is called when a new color blob is detected
      *
-     * @param {*} fun The callback to be called
+     * @param {Function} fun The callback to be called
      * @memberof Robobo
      */
     whenANewColorBlobIsDetected(fun) {
@@ -564,7 +564,7 @@ class Robobo {
     /**
      * Configures the callback that is called when a new tap is detected
      *
-     * @param {*} fun The callback to be called
+     * @param {Function} fun The callback to be called
      * @memberof Robobo
      */
     whenATapIsDetected(fun) {
@@ -574,7 +574,7 @@ class Robobo {
     /**
      * Configures the callback that is called when a new fling is detected
      *
-     * @param {*} fun The callback to be called
+     * @param {Function} fun The callback to be called
      * @memberof Robobo
      */
     whenAFlingIsDetected(fun) {
