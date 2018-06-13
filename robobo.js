@@ -84,7 +84,7 @@ class Robobo {
      */
     async moveWheelsByTimeBLK(speedR, speedL, time) {
         let unlock = false
-        this.rem.moveWheelsSeparatedWait(speedR, speedL, time,()=>(unlock = true));
+        this.rem.moveWheelsSeparatedWait(speedL, speedR, time,()=>(unlock = true));
         while (!unlock){
                 await this.update()
         }
