@@ -1,6 +1,6 @@
 # Robobo.js
 
-Robobo.js is the Javascript library used to create programs for the Robobo education robot (http://www.theroboboproject.com) in the Javascript language.
+Robobo.js is the Javascript library used to create programs for the Robobo educational robot (http://www.theroboboproject.com) in the Javascript language.
 
 Currently only remote programming is supported, but native execution in the robot is planned for the near future. Remote programming is usefull for learning, testing and debuging the programs. When native support were supported, after testing the program it will be possible to upload it to the robot for autonomous excution.
 
