@@ -1,6 +1,8 @@
-# robobo.js
+# Robobo.js
 
-Robobo.js is the javascript library used to interface with the Robobo Robotics platform.
+Robobo.js is the Javascript library used to create programs for the Robobo education robot (http://www.theroboboproject.com) in the Javascript language.
+
+Currently only remote programming is supported, but native execution in the robot is planned for the near future. Remote programming is usefull for learning, testing and debuging the programs. When native support were supported, after testing the program it will be possible to upload it to the robot for autonomous excution.
 
 ## Installation
 
@@ -8,7 +10,7 @@ To use this library on your project, clone or download this repositoy and put th
 
 The library runs on the Node.js runtime, and it must be installed before using it, it also depends on the Websocket library, that must be installed via the node package manager using the command `npm install ws`
 
-It's highly recommended to employ Visual Studio Code as the developing environment, as it has autocomplete for the language and allow the debug of the code.
+We recommend Visual Studio Code as the developing environment, as it has autocomplete for the language and allow the debug of the code.
 
 ## Basic usage
 
