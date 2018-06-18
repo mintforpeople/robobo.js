@@ -27,7 +27,7 @@ var Remote = require('./remote-library/remotelib');
  * Robobo.js is the library used to create programs for the Robobo educational 
  * robot (http://www.theroboboproject.com) in the Javascript language.
  * 
- * For more information and documentation: https://github.com/mytechia/robobo.js
+ * For more information and documentation see https://github.com/mytechia/robobo.js
  * 
  */
 class Robobo {
