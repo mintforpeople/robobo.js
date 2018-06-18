@@ -1,9 +1,38 @@
+/*******************************************************************************
+ * Copyright 2018 Mytech Ingenieria Aplicada <http://www.mytechia.com>
+ * Copyright 2018 Luis Llamas <luis.llamas@mytechia.com>
+ * Copyright 2018 Gervasio Varela <gervasio.varela@mytechia.com>
+ * 
+ * <p>
+ * This file is part of Robobo.js, the Robobo Javascript Programming Library.
+ * <p>
+ * Robobo.js is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Robobo.js is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Robobo.js.  If not, see <http://www.gnu.org/licenses/lgpl.html>.
+ ******************************************************************************/
+
 var Remote = require('./remote-library/remotelib');
 
 
+/** 
+ * Robobo.js is the library used to create programs for the Robobo educational 
+ * robot (http://www.theroboboproject.com) in the Javascript language.
+ * 
+ * For more information and documentation see https://github.com/mytechia/robobo.js
+ * 
+ */
 class Robobo {
 
-    /** Creates a new Robobo library instance.
+    /** Creates a new Robobo.js library instance.
      *  
      * @constructor
      * @param {string} ip The IP address of the Robobo robot
@@ -84,7 +113,7 @@ class Robobo {
      */
     async moveWheelsByTimeBLK(speedR, speedL, time) {
         let unlock = false
-        this.rem.moveWheelsSeparatedWait(speedR, speedL, time,()=>(unlock = true));
+        this.rem.moveWheelsSeparatedWait(speedL, speedR, time,()=>(unlock = true));
         while (!unlock){
                 await this.update()
         }
@@ -118,8 +147,8 @@ class Robobo {
     /** Moves the PAN of the base to the specified position at the specified speed and
      * waits until the movement has finished.
      * 
-     * @param {integer} position Position in degress of the TILT [-160..160]
-     * @param {integer} speed  Speed factor [-100..100]
+     * @param {integer} position Position in degress of the TILT [-170..170]
+     * @param {integer} speed  Speed factor [-40..40]
      */
     async movePanToBLK(position, speed) {
         let unlock = false
@@ -132,8 +161,8 @@ class Robobo {
 
     /** Moves the TILT of the base to the specified position at the specified speed
      * 
-     * @param {integer} position - Position in degress of the PAN [5..105]
-     * @param {integer} speed  - Speed factor [-100..100]
+     * @param {integer} position - Position in degress of the TILT [5..105]
+     * @param {integer} speed  - Speed factor [-10..10]
      */
     moveTiltTo(position, speed) {
         this.rem.moveTilt(position, speed)
@@ -176,7 +205,7 @@ class Robobo {
      * 
      * @param {string} text The text to say
      */
-     sayText(text) {
+    sayText(text) {
         let unlock = false
         this.rem.talk(text,()=>(unlock = false));
     }
@@ -326,26 +355,50 @@ class Robobo {
     resetFaceSensor() {
         this.rem.resetFaceSensor();
     }
-
+    /** Returns the number of claps registered since the last reset
+     *
+     *
+     * @returns {Integer} Clap counter
+     * @memberof Robobo
+     */
     readClapCounter() {
         return this.rem.getClaps();
     }
-
+    /** Resets the clap counter
+     *
+     *
+     * @memberof Robobo
+     */
     resetClapCounter() {
         this.rem.resetClapSensor();
     }
-
+    /** Returns the last note detected by the note sensor
+     *
+     *
+     * @returns Name (note) and duration (duration) of the last note
+     * @memberof Robobo
+     */
     readLastNote() {
         return {
             note : this.rem.getLastNote(),
             duration : this.rem.getLastNoteDuration()
         }
     }
-
+    /** Resets the last note registered by the note sensor
+     *
+     *
+     * @memberof Robobo
+     */
     resetLastNote() {
         this.rem.resetNoteSensor();
     }
-
+    /** Reads the last detected blob of color of the indicated color
+     *
+     *
+     * @param {*} color Color of the blob
+     * @returns The position of the blob (x,y) and the area (area)
+     * @memberof Robobo
+     */
     readColorBlob(color) {
         return {
             
@@ -355,7 +408,12 @@ class Robobo {
         }
 
     }
-
+    /** Reads all the color blob data 
+     *
+     *
+     * @returns A map returning the individual blob information (red, green, blue, custom)
+     * @memberof Robobo
+     */
     readAllColorBlobs() {
         return{
             red : this.readColorBlob('red'),
@@ -365,22 +423,55 @@ class Robobo {
         }
     }
 
+    /**
+     * Resets the color blob detector
+     *
+     * @memberof Robobo
+     */
     resetColorBlobs() {
         this.rem.resetBlobSensor();
     }
 
+    /**
+     * Activates the individual tracking of each color. 
+     * Warning: Color tracking is a computionally intensive task,
+     * activating all the colors may impact performance
+     *
+     * @param {Boolean} red Enables red blob tracking
+     * @param {Boolean} green Enables green blob tracking
+     * @param {Boolean} blue Enables blue blob tracking
+     * @param {Boolean} custom Enables custom blob tracking
+     * @memberof Robobo
+     */
     setColorBlobDetectionActive(red, green, blue, custom) {
         this.rem.configureBlobDetection(red,green,blue,custom);
     }
-
+    
+    /**
+     * Reads the data of the fling sensor
+     *
+     * @returns Lasta angle detected on the sensor
+     * @memberof Robobo
+     */
     readFlingSensor() {
         return this.rem.checkFlingAngle();
     }
 
+    /**
+     * Resets the state of the Fling sensor
+     *
+     * @memberof Robobo
+     */
     resetFlingSensor() {
         this.rem.resetFlingSensor();
     }
 
+    /**
+     * Reads the data on the tap sensor
+     *
+     * @returns Coordinates of the last registered tap (x, y) and the zone of the face
+     * @memberof Robobo
+     */
     readTapSensor() {
         return {
             x: this.rem.getTapCoord('x'),
@@ -389,18 +480,35 @@ class Robobo {
         }
     }
 
+    /**
+     * Resets the tap sensor value
+     *
+     * @memberof Robobo
+     */
     resetTapSensor() {
         this.rem.resetTapSensor();
     }
 
+    /**
+     * Reads the orientation sensor
+     * Warning: This sensor may not be available on all the devices
+     *
+     * @returns The orientation of the smartphone (yaw, pitch and roll)
+     * @memberof Robobo
+     */
     readOrientationSensor() {
         return {
-            x: this.rem.getOrientation('x'),
-            y: this.rem.getOrientation('y'),
-            z: this.rem.getOrientation('z')
+            yaw: this.rem.getOrientation('yaw'),
+            pitch: this.rem.getOrientation('pitch'),
+            roll: this.rem.getOrientation('roll')
         }
     }
-
+    /**
+     * Reads the acceleration sensor
+     *
+     * @returns The current acceleration of the smartphone (x, y, z)
+     * @memberof Robobo
+     */
     readAccelerationSensor() {
         return {
             x: this.rem.getAcceleration('x'),
@@ -408,7 +516,12 @@ class Robobo {
             z: this.rem.getAcceleration('z')
         }
     }
-
+    /**
+     * Reads the brightness detected by the smartphone light sensor
+     *
+     * @returns The current brightness value
+     * @memberof Robobo
+     */
     readBrightnessSensor() {
         return this.rem.getLightBrightness();
     }
@@ -438,27 +551,61 @@ class Robobo {
         console.log(text);
     }
 
-
+    /**
+     * Configures the callback that is called when a new note is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
     whenANoteIsDetected(fun) {
         this.rem.registerCallback("onNewNote",fun);
     }
 
+    /**
+     * Configures the callback that is called when a new face is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
     whenANewFaceIsDetected(fun) {
         this.rem.registerCallback("onNewFace",fun);
     }
-
+    /**
+     * Configures the callback that is called when a face is lost
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
     whenAFaceIsLost(fun) {
         this.rem.registerCallback("onLostFace",fun);
     }
 
+    /**
+     * Configures the callback that is called when a new color blob is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
     whenANewColorBlobIsDetected(fun) {
         this.rem.registerCallback("onNewBlob",fun);
     }
 
+    /**
+     * Configures the callback that is called when a new tap is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
     whenATapIsDetected(fun) {
         this.rem.registerCallback("onNewTap",fun);
     }
 
+    /**
+     * Configures the callback that is called when a new fling is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
     whenAFlingIsDetected(fun) {
         this.rem.registerCallback("onNewFling",fun);
     }

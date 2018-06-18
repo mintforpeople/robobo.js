@@ -4,12 +4,18 @@
     // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "type": "node",
             "request": "launch",
             "name": "Test",
             "program": "${workspaceFolder}/examples/basic-example.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Robobo Project Template",
+            "program": "${workspaceFolder}/robobo-proyect-template/app.js",
+            "console": "integratedTerminal"
         }
     ]
 }
