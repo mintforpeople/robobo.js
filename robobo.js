@@ -1,9 +1,38 @@
+/*******************************************************************************
+ * Copyright 2018 Mytech Ingenieria Aplicada <http://www.mytechia.com>
+ * Copyright 2018 Luis Llamas <luis.llamas@mytechia.com>
+ * Copyright 2018 Gervasio Varela <gervasio.varela@mytechia.com>
+ * 
+ * <p>
+ * This file is part of Robobo.js, the Robobo Javascript Programming Library.
+ * <p>
+ * Robobo.js is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Robobo.js is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Robobo.js.  If not, see <http://www.gnu.org/licenses/lgpl.html>.
+ ******************************************************************************/
+
 var Remote = require('./remote-library/remotelib');
 
 
+/** 
+ * Robobo.js is the library used to create programs for the Robobo educational 
+ * robot (http://www.theroboboproject.com) in the Javascript language.
+ * 
+ * For more information and documentation: https://github.com/mytechia/robobo.js
+ * 
+ */
 class Robobo {
 
-    /** Creates a new Robobo library instance.
+    /** Creates a new Robobo.js library instance.
      *  
      * @constructor
      * @param {string} ip The IP address of the Robobo robot
@@ -176,7 +205,7 @@ class Robobo {
      * 
      * @param {string} text The text to say
      */
-     sayText(text) {
+    sayText(text) {
         let unlock = false
         this.rem.talk(text,()=>(unlock = false));
     }
