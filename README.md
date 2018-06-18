@@ -6,7 +6,7 @@ Currently only remote programming and command is supported (programs run in a co
 
 ## Installation
 
-To use this library on your project, clone or download this repositoy and put the robobo.js file and the remote-library in your project folder.
+To use this library on your project, clone or download this repositoy and put the robobo.js file and the remote-library in your project folder. Or download our [template project from releases](https://github.com/mytechia/robobo.js/releases/tag/project-template-v0.9.1).
 
 The library runs on the Node.js runtime, and it must be installed before using the library, which also depends on the Websocket library, that must be installed via the node package manager using the command `npm install ws`.
 
