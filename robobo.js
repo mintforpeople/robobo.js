@@ -47,6 +47,14 @@ class Robobo {
 
         this.unlockFunction = () => {  };
 
+        
+        this.FaceLostFlag = false;
+        this.FlingFlag = false;
+        this.BlobFlag = false;
+        this.NewFaceFlag = false;
+        this.NoteFlag = false;
+        this.TapFlag = false;
+
         this.rem.registerCallback('talkCallback',this.unlockFunction);
         this.rem.registerCallback('onNewBlob',this.unlockFunction);
         this.rem.registerCallback('onLowBatt',this.unlockFunction);
@@ -558,7 +566,17 @@ class Robobo {
      * @memberof Robobo
      */
     whenANoteIsDetected(fun) {
-        this.rem.registerCallback("onNewNote",fun);
+        if (this.NoteFlag){
+            console.log("Warning: Note callback ignored, too much concurrent calls");
+        }else{
+            this.rem.registerCallback("onNewNote",()=>{
+
+            this.NoteFlag = true;
+            fun();
+            this.NoteFlag = false;
+            });
+
+        }
     }
 
     /**
@@ -568,7 +586,18 @@ class Robobo {
      * @memberof Robobo
      */
     whenANewFaceIsDetected(fun) {
-        this.rem.registerCallback("onNewFace",fun);
+        if (this.NewNoteFlag){
+            console.log("Warning:  callback ignored, too much concurrent calls");
+        }else{
+            this.rem.registerCallback("onNewFace",()=>{
+
+            this.NewNoteFlag = true;
+            fun();
+            this.NewNoteFlag = false;
+            });
+
+        }
+    
     }
     /**
      * Configures the callback that is called when a face is lost
@@ -577,7 +606,17 @@ class Robobo {
      * @memberof Robobo
      */
     whenAFaceIsLost(fun) {
-        this.rem.registerCallback("onLostFace",fun);
+        if (this.FaceLostFlag){
+            console.log("Warning: Face Lost callback ignored, too much concurrent calls");
+        }else{
+            this.rem.registerCallback("onLostFace",()=>{
+
+            this.FaceLostFlag = true;
+            fun();
+            this.FaceLostFlag = false;
+            })
+
+        }
     }
 
     /**
@@ -587,7 +626,16 @@ class Robobo {
      * @memberof Robobo
      */
     whenANewColorBlobIsDetected(fun) {
-        this.rem.registerCallback("onNewBlob",fun);
+        if (this.BlobFlag){
+            console.log("Warning: New Blob callback ignored, too much concurrent calls");
+        }else{
+            this.rem.registerCallback("onNewBlob",()=>{
+            this.BlobFlag = true;
+            fun();
+            this.BlobFlag = false;
+            });
+
+        }
     }
 
     /**
@@ -597,7 +645,16 @@ class Robobo {
      * @memberof Robobo
      */
     whenATapIsDetected(fun) {
-        this.rem.registerCallback("onNewTap",fun);
+        if (this.TapFlag){
+            console.log("Warning: New Tap callback ignored, too much concurrent calls");
+        }else{
+            this.rem.registerCallback("onNewTap",
+            ()=>{            
+                this.TapFlag = true;
+                fun();
+                this.TapFlag = false;}
+            );
+        }
     }
 
     /**
@@ -607,7 +664,17 @@ class Robobo {
      * @memberof Robobo
      */
     whenAFlingIsDetected(fun) {
-        this.rem.registerCallback("onNewFling",fun);
+        if (this.FlinbgFlag){
+            console.log("Warning:  callback ignored, too much concurrent calls");
+        }else{
+            this.rem.registerCallback("onNewFling",()=>{
+
+            this.FlingFlag = true;
+            fun();
+            this.FlingFlag = false;
+            });
+
+        }
     }
 
     changeStatusFrequency(freq){
