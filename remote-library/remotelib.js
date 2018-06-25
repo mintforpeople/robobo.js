@@ -1039,6 +1039,16 @@ Remote.prototype = {
     }
   }, //ENDOF keepAlive
 
+  changeStatusFrequency : function (freq) {
+    var message = JSON.stringify({
+        "name": "SET-SENSOR-FREQUENCY",
+        "parameters": {"frequency":freq},
+        "id": this.commandid
+    });
+    this.sendMessage(message);
+
+  }, //ENDOF keepAliveMsg
+
   resetFaceSensor : function() {
     //face sensor
     this.statusmap.set("facex",0);
@@ -1191,7 +1201,7 @@ Remote.prototype = {
   manageStatus : function (msg) {
 
 
-
+    console.log(msg.name);
     if (msg.name == "TapNumber"){
       console.log(msg.value);
     }

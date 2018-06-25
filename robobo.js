@@ -609,6 +609,10 @@ class Robobo {
     whenAFlingIsDetected(fun) {
         this.rem.registerCallback("onNewFling",fun);
     }
+
+    changeStatusFrequency(freq){
+        this.rem.changeStatusFrequency(freq);
+    }
 }
 
 module.exports = Robobo;

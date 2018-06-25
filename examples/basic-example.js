@@ -5,7 +5,6 @@ async function main(){
     robobo = new Robobo('192.168.0.253');
 
     await robobo.connect();
-
     await robobo.sayText('asas');
     await robobo.movePanToBLK(-100, 20);
     await robobo.movePanToBLK(100, 20);
