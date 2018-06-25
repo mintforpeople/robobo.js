@@ -104,6 +104,8 @@ function Remote(ip,passwd){
   this.panLastTime = Date.now();
   this.tiltLastTime = Date.now();
   
+  ;
+
   
 
 //END OF REMOTE OBJECT
@@ -227,6 +229,14 @@ Remote.prototype = {
       console.log("Error in websocket connection to Robobo: "+error);
     }.bind(this);
 
+    this.setIRValue('Back-R',0);
+    this.setIRValue('Back-C',0);
+    this.setIRValue('Front-RR',0);
+    this.setIRValue('Front-R',0);
+    this.setIRValue('Front-C',0); 
+    this.setIRValue('Front-L',0);
+    this.setIRValue('Front-LL',0);
+    this.setIRValue('Back-L',0)
   }, //ENDOF connect
   filterMovement(speed,axis){
     if (speed == 0){
@@ -1201,7 +1211,7 @@ Remote.prototype = {
   manageStatus : function (msg) {
 
 
-    console.log(msg.name);
+    //console.log(msg.name);
     if (msg.name == "TapNumber"){
       console.log(msg.value);
     }

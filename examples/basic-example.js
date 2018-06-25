@@ -2,7 +2,7 @@ async function main(){
 
     var Robobo = require('../robobo');
 
-    robobo = new Robobo('192.168.0.253');
+    var robobo = new Robobo('192.168.0.253');
 
     await robobo.connect();
     await robobo.sayText('asas');
@@ -12,7 +12,6 @@ async function main(){
     await robobo.moveTiltToBLK(80, 20);
     robobo.movePanTo(0, 20);
     robobo.moveTiltTo(90, 20);
-
 
 
    
