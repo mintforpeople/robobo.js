@@ -689,6 +689,10 @@ class Robobo {
         this.rem.changeStatusFrequency(freq);
     }
 
+    /**
+     * Prints a message in the console
+     * @param {String} message The text to output in the console
+     */
     print(message){
         console.log(message);
     }
