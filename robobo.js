@@ -688,6 +688,10 @@ class Robobo {
     changeStatusFrequency(freq){
         this.rem.changeStatusFrequency(freq);
     }
+
+    print(message){
+        console.log(message);
+    }
 }
 
 module.exports = Robobo;

@@ -236,7 +236,8 @@ Remote.prototype = {
     this.setIRValue('Front-C',0); 
     this.setIRValue('Front-L',0);
     this.setIRValue('Front-LL',0);
-    this.setIRValue('Back-L',0)
+    this.setIRValue('Back-L',0);
+    this.resetSensors();
   }, //ENDOF connect
   filterMovement(speed,axis){
     if (speed == 0){
@@ -1088,14 +1089,14 @@ Remote.prototype = {
   },
 
   resetIRs : function() {
-    this.statusmap.set("IRSensorStatus1",0);
-    this.statusmap.set("IRSensorStatus2",0);
-    this.statusmap.set("IRSensorStatus3",0);
-    this.statusmap.set("IRSensorStatus4",0);
-    this.statusmap.set("IRSensorStatus5",0);
-    this.statusmap.set("IRSensorStatus6",0);
-    this.statusmap.set("IRSensorStatus7",0);
-    this.statusmap.set("IRSensorStatus8",0);
+    this.setIRValue('Back-R',0);
+    this.setIRValue('Back-C',0);
+    this.setIRValue('Front-RR',0);
+    this.setIRValue('Front-R',0);
+    this.setIRValue('Front-C',0); 
+    this.setIRValue('Front-L',0);
+    this.setIRValue('Front-LL',0);
+    this.setIRValue('Back-L',0);
 
   },
 
@@ -1353,6 +1354,7 @@ Remote.prototype = {
     }
 
     else if (msg.name == "ORIENTATION") {
+      //console.log(msg);
 
       this.statusmap.set("yaw",parseInt(msg.value["yaw"]));
       this.statusmap.set("pitch",parseInt(msg.value["pitch"]));
@@ -1360,7 +1362,6 @@ Remote.prototype = {
     }
 
     else if (msg.name == "ACCELERATION") {
-      //console.log(msg);
       this.statusmap.set("xaccel",parseFloat(msg.value["xaccel"]));
       this.statusmap.set("yaccel",parseFloat(msg.value["yaccel"]));
       this.statusmap.set("zaccel",parseFloat(msg.value["zaccel"]));
@@ -1395,7 +1396,7 @@ Remote.prototype = {
       }
     }
     else if (msg.name == "UNLOCK-MOVE") {
-      //console.log('UNLOCK-MOVE '+msg.value['blockid']);
+      //console.SET-SENSOR-FREQUENCYlog('UNLOCK-MOVE '+msg.value['blockid']);
       //(this.blockingcallbackmap.get(""+msg.value['blockid']))();
       if(!!this.wheelsCallbackMap.get(msg.value['blockid'])){
         this.wheelsCallbackMap.get(msg.value['blockid'])();
@@ -1454,7 +1455,7 @@ Remote.prototype = {
     }
 
     else if (msg.name == "NOTE") {
-      //console.log(msg.value['name']+'  '+msg.value['index']+'  '+msg.value['octave']);
+      //console.log(msg.value['name']+'  '+msg.value['index']+'  '+msg.value['octave']+'  '+msg.value['duration']);
       this.statusmap.set("lastNote",msg.value['name']);
       this.statusmap.set("lastNoteDuration",msg.value['duration']);
       
@@ -1471,6 +1472,8 @@ Remote.prototype = {
 
     }
     else if (msg.name == "WHEELS") {
+      //console.log("WHEELS "+msg.value['wheelPosL']);
+
       this.statusmap.set("wheelPosR",parseInt(msg.value['wheelPosR']));
       this.statusmap.set("wheelPosL",parseInt(msg.value['wheelPosL']));
       this.statusmap.set("wheelSpeedR",parseInt(msg.value['wheelSpeedR']));

@@ -7,6 +7,8 @@ async function main(){
     await robobo.connect();
     robobo.moveWheels(20, 20);
     while (robobo.readIRSensor('Front-C')<100){
+        console.log(robobo.readIRSensor('Front-C'));
+
         await robobo.update();
     }
     robobo.stopMotors();
