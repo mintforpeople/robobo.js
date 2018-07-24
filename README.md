@@ -53,6 +53,17 @@ There are 5 types of methods in the library, connection functions, like the ones
 
 ### Conection Methods
 
+The connection methods are used to manage the connection with the robot:
+
+``` javascript
+    /** Establishes a remote connection with the Robobo indicated by
+     * the IP address associated to this instance. */
+    async connect() 
+
+    /** Disconnects the library from the Robobo robot  */
+    async disconnect() 
+```
+
 ### Actuator methods
 
 The functions for controlling the effectors on the robot are the following:
@@ -149,4 +160,155 @@ main()
 ```
 ### Sensor methods
 
+The sensor methods are used to fretrieve the information from the different sensors of the robobo platform.
+
+``` javascript
+
+    /** Returns the position of the wheel in degrees  */
+    readWheelPosition(wheel)
+
+    /** Returns the current speed of the wheel  */
+    readWheelSpeed(wheel)
+
+    /** Returns the current position of the PAN */
+    readPanPosition()
+
+    /** Returns the current position of the TILT  */
+    readTiltPosition()
+
+    /** Returns the current value sensed by the specified IR*/
+    readIRSensor(sensor)
+
+    /** Returns the values of all the IR sensors.
+     * 
+     * Example of use:
+     * let irs = readAllIRSensor();
+     * console.log(irs.BackR);
+     * console.log(irs.FrontRR);
+     */
+    readAllIRSensor() 
+
+    /** Returns the battery level of the base or the smartphone  */
+    readBatteryLevel(device) 
+
+    /** Returns the position and distance of the last face detected by the robot
+     * 
+     * Example of use:
+     * let face = robobo.readFaceSensor();
+     * console.log(face.distance); //the distance to the person
+     * console.log(face.x); //the position of the face in X axis
+     * console.log(fase.y); //the position of the face in Y axis
+     */
+    readFaceSensor()
+
+    /** Returns the number of claps registered since the last reset  */
+    readClapCounter() 
+
+    /** Returns the last note detected by the note sensor */
+    readLastNote() 
+
+    /** Reads the last detected blob of color of the indicated color  */
+    readColorBlob(color)
+
+    /** Reads all the color blob data   */
+    readAllColorBlobs()
+
+    /** Returns the last note detected by the note sensor  */
+    readLastNote()
+
+```
+All the sensor methods are synchonous and don't need to be called with the `await` keyword.
+If you need to call this functions on a loop you must call either the `robobo.update()` or `robobo.pause()` methods at least once per iteration. 
+The following example shows the values of all sensors in real time:
+
+```javascript
+
+async function main(){
+
+    var Robobo = require('../robobo');
+
+    var robobo = new Robobo('192.168.0.71');
+
+    await robobo.connect();
+
+    await robobo.pause(1);
+    while(true){
+        await robobo.update();
+        robobo.print("SENSOR STATUS:")
+        robobo.print("IR: "+JSON.stringify(robobo.readAllIRSensor()));
+        robobo.print("Blob: "+JSON.stringify(robobo.readAllColorBlobs()));
+        robobo.print("Face: "+JSON.stringify(robobo.readFaceSensor()));
+        robobo.print("Acceleration: "+JSON.stringify(robobo.readAccelerationSensor()));
+        robobo.print("Orientation: "+JSON.stringify(robobo.readOrientationSensor()));
+        robobo.print("Claps: "+JSON.stringify(robobo.readClapCounter()));
+        robobo.print("Fling: "+JSON.stringify(robobo.readFlingSensor()));
+        robobo.print("Tap: "+JSON.stringify(robobo.readTapSensor()));
+        robobo.print("Battery: "+JSON.stringify(robobo.readBatteryLevel()));
+
+    }
+}
+```
+
+There are some methods that allow to clear the sensor readings to the default values:
+
+``` javascript
+
+    /** Resets the face sensor.
+     * After this function, and until a new face is detected, the face sensor
+     * will return 0 as values for distance, x and y position.
+     */
+    resetFaceSensor()
+    
+    /** Resets the clap counter  */
+    resetClapCounter()
+
+     /** Resets the color blob detector  */
+    resetColorBlobs()
+
+     /** Resets the state of the Fling sensor  */
+    resetFlingSensor()
+
+    /** Resets the tap sensor value  */
+    resetTapSensor() 
+
+    /** Resets the last note registered by the note sensor  */
+    resetLastNote()
+    
+```
+### Configuration methods
+
+The configuration methods allow to configure diferent parameters of the robot:
+
+``` javascript
+
+    /** Activates the individual tracking of each color. 
+     * Warning: Color tracking is a computionally intensive task,
+     * activating all the colors may impact performance  */
+    setColorBlobDetectionActive(red, green, blue, custom)
+
+    /** Changes the frequency of the status (LOW, NORMAL,HIGH, MAX)  */
+    changeStatusFrequency(freq)
+```
 ### Callback methods
+
+The last type of methods allow the user to set up callback functions that will be called when a especific event is triggered.
+
+``` javascript
+    /** Configures the callback that is called when a new note is detected  */
+    whenANoteIsDetected(fun) 
+
+    /** Configures the callback that is called when a new face is detected  */
+    whenANewFaceIsDetected(fun) 
+
+    /** Configures the callback that is called when a face is lost  */
+    whenAFaceIsLost(fun)
+
+    /** Configures the callback that is called when a new color blob is detected  */
+    whenANewColorBlobIsDetected(fun)
+
+    /** Configures the callback that is called when a new tap is detected  */
+    whenATapIsDetected(fun) 
+
+    /** Configures the callback that is called when a new fling is detected  */
+    whenAFlingIsDetected(fun) 
+```

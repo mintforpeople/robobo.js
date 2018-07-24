@@ -684,7 +684,10 @@ class Robobo {
 
         
     }
-
+    /**
+     * Changes the frequency of the status (LOW, NORMAL,HIGH, MAX)
+     * @param {String} freq 
+     */
     changeStatusFrequency(freq){
         this.rem.changeStatusFrequency(freq);
     }
