@@ -721,7 +721,7 @@ Remote.prototype = {
 
   /** Returns the last know color of the specified led */
   getLedColor : function (led, channel){
-      return this.statusmap.get(led+channel);
+      return this.statusmap.get(led+'LED-'+channel);
 
   },
 
@@ -1495,9 +1495,9 @@ Remote.prototype = {
       */
     }
     else if (msg.name == "LED") {
-      this.statusmap.set(msg.value['id']+"R",msg.value['R']);
-      this.statusmap.set(msg.value['id']+"G",msg.value['G']);
-      this.statusmap.set(msg.value['id']+"B",msg.value['B']);
+      this.statusmap.set(msg.value['id']+"LED-R",msg.value['R']);
+      this.statusmap.set(msg.value['id']+"LED-G",msg.value['G']);
+      this.statusmap.set(msg.value['id']+"LED-B",msg.value['B']);
 
     }
     else if (msg.name == "EMOTION") {

@@ -24,7 +24,7 @@ To use the library within your code you have first to import it using require an
     var robobo = new Robobo('192.168.0.253');
 ```
 
-After the library is instantiated, we can connect to the robot via the ćonnect()` method of the class
+After the library is instantiated, we can connect to the robot via the `connect()` method of the class
 
 ``` javascript
     // Connect to the robobo base
@@ -50,6 +50,8 @@ main()
 
 When the robot is connected we can start to execute command on it.
 There are 5 types of methods in the library, connection functions, like the ones that we talked before, commands to use the actuators of the robot, such as the wheels or the pan/tilt, methods to recover the status of the sensors, reset functions to clean the sensor values and callback setters to react to events in real time.
+
+### Conection Methods
 
 ### Actuator methods
 
@@ -145,3 +147,6 @@ main()
 
 
 ```
+### Sensor methods
+
+### Callback methods
