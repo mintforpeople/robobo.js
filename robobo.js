@@ -146,7 +146,7 @@ class Robobo {
     /** Moves the PAN of the base to the specified position at the specified speed
      * 
      * @param {integer} position Position in degress of the PAN [-160..160]
-     * @param {integer} speed  Speed factor [-100..100]
+     * @param {integer} speed  Speed factor [-40..40]
      */
     movePanTo(position, speed) {
         this.rem.movePan(position,speed);
@@ -155,7 +155,7 @@ class Robobo {
     /** Moves the PAN of the base to the specified position at the specified speed and
      * waits until the movement has finished.
      * 
-     * @param {integer} position Position in degress of the TILT [-170..170]
+     * @param {integer} position Position in degress of the PAN [-170..170]
      * @param {integer} speed  Speed factor [-40..40]
      */
     async movePanToBLK(position, speed) {
@@ -180,7 +180,7 @@ class Robobo {
      * waits until the movement has finished.
      * 
      * @param {integer} position Position in degress of the TILT [5..105]
-     * @param {integer} speed  Speed factor [-100..100]
+     * @param {integer} speed  Speed factor [-10..10]
      */
     async moveTiltToBLK(position, speed, blocking) {
         let unlock = false
