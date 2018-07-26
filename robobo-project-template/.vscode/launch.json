@@ -9,7 +9,6 @@
             "request": "launch",
             "name": "Lauch App",
             "program": "${workspaceFolder}/app.js",
-            "console": "integratedTerminal"
         }   
     ]
 }
