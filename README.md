@@ -31,7 +31,7 @@ After the library is instantiated, we can connect to the robot via the `connect(
     await robobo.connect();
 ```
 
-Note that the word `await` is used before the call to the function, this is becaus the connect function is a asyncronous one, await pauses the execution until the the connection is stablished, then resume the execution of the rest of the lines. `await` is used in more functions and its usage will be explained further in this document. 
+Note that the word `await` is used before the call to the function, this is because the connect function is a asyncronous one, await pauses the execution until the the connection is stablished, then resume the execution of the rest of the lines. `await` is used in more functions and its usage will be explained further in this document. 
 To allow the usage of the await keyword, the code must be inside of an async funtion, so the code we have until this point would be like this:
 
 ``` javascript
@@ -81,10 +81,6 @@ The functions for controlling the effectors on the robot are the following:
     async moveWheelsByTimeBLK(speedR, speedL, time)
 
     /** Moves the wheels of the robot by some degress at the specified speed.
-     * 
-     * @param {string} wheel - Wheels to move [left | right | both]
-     * @param {integer} degrees - Degress to move the wheel
-     * @param {integer} speed  - Speed factor [-100..100]
      */
     async moveWheelsByDegreesBLK(wheel, degrees, speed)
 

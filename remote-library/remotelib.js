@@ -974,6 +974,26 @@ Remote.prototype = {
     return this.statusmap.get("facedist");
   },//ENDOF getFaceDist
 
+  getQRCoord(axis){
+    if (axis=="x") {
+      return this.statusmap.get("qrx");
+
+    }else{
+      return this.statusmap.get("qry");
+    }
+  },//ENDOF getQRCoord
+
+  getQRDist(){
+    
+      return this.statusmap.get("qrdist");
+
+  },//ENDOF getQRDist
+
+  getQRId(){
+    
+    return this.statusmap.get("qrid");
+
+},//ENDOF getQRId
 
   /**********************************************/
   /* ENDOF VISION-BASED INTERACTION FUNCTIONS   *
@@ -997,6 +1017,7 @@ Remote.prototype = {
     }
 
   },//ENDOF getTapCoord
+
 
   getTapZone : function() {
     x = this.getTapCoord("x");
@@ -1506,7 +1527,38 @@ Remote.prototype = {
 
     }
 
+    else if (msg.name == "QRCODE") {
+      //console.log("QR");
+      this.statusmap.set("qrx",parseInt(msg.value["coordx"]));
+      this.statusmap.set("qry",parseInt(msg.value["coordy"]));
+      this.statusmap.set("qrdist",parseInt(msg.value["distance"]));
 
+      this.statusmap.set("qrid",msg.value["id"]);
+      this.callbackmap.get("onQR")();
+  
+    }
+
+    else if (msg.name == "QRCODEAPPEAR") {
+      //console.log("NewQR");
+
+      this.statusmap.set("qrx",parseInt(msg.value["coordx"]));
+      this.statusmap.set("qry",parseInt(msg.value["coordy"]));
+      this.statusmap.set("qrdist",parseInt(msg.value["distance"]));
+
+      this.statusmap.set("qrid",msg.value["id"]);
+      this.callbackmap.get("onQRAppear")();
+
+  
+    }
+
+    else if (msg.name == "QRCODELOST") {
+      
+      //console.log("LostQR");
+
+      this.callbackmap.get("onQRDisappear")();
+
+  
+    }
 
     else {
       console.log('Lost status '+ msg.name);

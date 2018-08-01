@@ -51,6 +51,8 @@ class Robobo {
         this.FaceLostFlag = false;
         this.FlingFlag = false;
         this.BlobFlag = false;
+        this.QRFlag = false;
+        this.LostQRFlag = false;
         this.NewFaceFlag = false;
         this.NoteFlag = false;
         this.TapFlag = false;
@@ -67,6 +69,9 @@ class Robobo {
         this.rem.registerCallback('onError',this.unlockFunction);
         this.rem.registerCallback('onPhrase',this.unlockFunction);
         this.rem.registerCallback('onNewNote',this.unlockFunction);
+        this.rem.registerCallback('onQR',this.unlockFunction);
+        this.rem.registerCallback('onQRAppear',this.unlockFunction);
+        this.rem.registerCallback('onQRDisappear',this.unlockFunction);
 
     }
 
@@ -416,6 +421,24 @@ class Robobo {
         }
 
     }
+
+    /** Reads the last detected qr
+     *
+     *
+     * 
+     * @returns The position of the qr (x,y), the distance (distance) and the id (id)
+     * @memberof Robobo
+     */
+    readQR() {
+        return {
+            
+            x: this.rem.getQRCoord('x'),
+            y: this.rem.getQRCoord('y'),
+            distance: this.rem.getQRDist(),
+            id: this.rem.getQRId()
+        }
+
+    }
     /** Reads all the color blob data 
      *
      *
@@ -431,6 +454,7 @@ class Robobo {
         }
     }
 
+    
     /**
      * Resets the color blob detector
      *
@@ -637,6 +661,48 @@ class Robobo {
                 this.BlobFlag = true;
                 fun();
                 this.BlobFlag = false;
+            }
+        });
+
+        
+    }
+
+    /**
+     * Configures the callback that is called when a new qrcode is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
+    whenANewQRCodeIsDetected(fun) {
+        
+        this.rem.registerCallback("onQRAppear",()=>{
+            if (this.QRFlag){
+                console.log("Warning: New QR callback ignored, too much concurrent calls");
+            }else{
+                this.QRFlag = true;
+                fun();
+                this.QRFlag = false;
+            }
+        });
+
+        
+    }
+
+    /**
+     * Configures the callback that is called when a new qrcode is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
+    whenAQRCodeIsLost(fun) {
+        
+        this.rem.registerCallback("onQRDisappear",()=>{
+            if (this.LostQRFlag){
+                console.log("Warning: Lost QR callback ignored, too much concurrent calls");
+            }else{
+                this.LostQRFlag = true;
+                fun();
+                this.LostQRFlag = false;
             }
         });
 

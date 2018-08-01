@@ -2,16 +2,16 @@ async function main(){
 
     var Robobo = require('../robobo');
 
-    var robobo = new Robobo('192.168.0.253');
+    var robobo = new Robobo('192.168.0.71');
 
 
 
     console.log(process.argv);
 
-    await robobo.connect();
+    
     await robobo.sayText('asas');
 
-    robobo.changeStatusFrequency('MAX');
+    //robobo.changeStatusFrequency('MAX');
     //robobo.changeStatusFrequency('LOW');
     await robobo.sayText('asas');
     await robobo.movePanToBLK(-100, 20);
