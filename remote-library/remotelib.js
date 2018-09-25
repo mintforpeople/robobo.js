@@ -88,10 +88,10 @@ function Remote(ip,passwd){
 
   this.wheelsSpeedLimit = 250;
 
-  this.panInferiorLimit =  10;
-  this.panSuperiorLimit =  345;
+  this.panInferiorLimit =  11;
+  this.panSuperiorLimit =  343;
 
-  this.tiltInferiorLimit = 5;
+  this.tiltInferiorLimit = 7;
   this.tiltSuperiorLimit = 105;
 
   this.minIRValue = 20;
@@ -983,6 +983,10 @@ Remote.prototype = {
     }
   },//ENDOF getQRCoord
 
+  getQRPoint(point){
+    return {x:this.statusmap.get("p"+point+"x"),y: this.statusmap.get("p"+point+"y")}
+  },//ENDOF getQRpoint
+
   getQRDist(){
     
       return this.statusmap.get("qrdist");
@@ -1532,6 +1536,12 @@ Remote.prototype = {
       this.statusmap.set("qrx",parseInt(msg.value["coordx"]));
       this.statusmap.set("qry",parseInt(msg.value["coordy"]));
       this.statusmap.set("qrdist",parseInt(msg.value["distance"]));
+      this.statusmap.set("p1x",parseInt(msg.value["p1x"]));
+      this.statusmap.set("p1y",parseInt(msg.value["p1y"]));
+      this.statusmap.set("p2x",parseInt(msg.value["p2x"]));
+      this.statusmap.set("p2y",parseInt(msg.value["p2y"]));
+      this.statusmap.set("p3x",parseInt(msg.value["p3x"]));
+      this.statusmap.set("p3y",parseInt(msg.value["p3y"]));
 
       this.statusmap.set("qrid",msg.value["id"]);
       this.callbackmap.get("onQR")();
@@ -1540,10 +1550,16 @@ Remote.prototype = {
 
     else if (msg.name == "QRCODEAPPEAR") {
       //console.log("NewQR");
-
+      //console.log(msg.value)
       this.statusmap.set("qrx",parseInt(msg.value["coordx"]));
       this.statusmap.set("qry",parseInt(msg.value["coordy"]));
       this.statusmap.set("qrdist",parseInt(msg.value["distance"]));
+      this.statusmap.set("p1x",parseInt(msg.value["p1x"]));
+      this.statusmap.set("p1y",parseInt(msg.value["p1y"]));
+      this.statusmap.set("p2x",parseInt(msg.value["p2x"]));
+      this.statusmap.set("p2y",parseInt(msg.value["p2y"]));
+      this.statusmap.set("p3x",parseInt(msg.value["p3x"]));
+      this.statusmap.set("p3y",parseInt(msg.value["p3y"]));
 
       this.statusmap.set("qrid",msg.value["id"]);
       this.callbackmap.get("onQRAppear")();

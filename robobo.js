@@ -52,6 +52,8 @@ class Robobo {
         this.FlingFlag = false;
         this.BlobFlag = false;
         this.QRFlag = false;
+        this.DetectQRFlag = false;
+
         this.LostQRFlag = false;
         this.NewFaceFlag = false;
         this.NoteFlag = false;
@@ -434,6 +436,13 @@ class Robobo {
             
             x: this.rem.getQRCoord('x'),
             y: this.rem.getQRCoord('y'),
+            p1:this.rem.getQRPoint(1),
+           
+            p2:this.rem.getQRPoint(2),
+            
+            p3:this.rem.getQRPoint(3),
+            
+
             distance: this.rem.getQRDist(),
             id: this.rem.getQRId()
         }
@@ -682,6 +691,27 @@ class Robobo {
                 this.QRFlag = true;
                 fun();
                 this.QRFlag = false;
+            }
+        });
+
+        
+    }
+
+    /**
+     * Configures the callback that is called when a new qrcode is detected
+     *
+     * @param {Function} fun The callback to be called
+     * @memberof Robobo
+     */
+    whenQRCodeIsDetected(fun) {
+        
+        this.rem.registerCallback("onQR",()=>{
+            if (this.DetectQRFlag){
+                console.log("Warning: QR callback ignored, too much concurrent calls");
+            }else{
+                this.DetectQRFlag = true;
+                fun();
+                this.DetectQRFlag = false;
             }
         });
 
