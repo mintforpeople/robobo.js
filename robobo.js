@@ -622,12 +622,12 @@ class Robobo {
     whenANewFaceIsDetected(fun) {
         
         this.rem.registerCallback("onNewFace",()=>{
-            if (this.NewNoteFlag){
+            if (this.NewFaceFlag){
                 console.log("Warning:  callback ignored, too much concurrent calls");
             }else{
-                this.NewNoteFlag = true;
+                this.NewFaceFlag = true;
                 fun();
-                this.NewNoteFlag = false;
+                this.NewFaceFlag = false;
             }
         });
 
