@@ -564,7 +564,7 @@ class Robobo {
      * @memberof Robobo
      */
     readBrightnessSensor() {
-        return this.rem.getLightBrightness();
+        return this.rem.getBrightness();
     }
 
     /** Forces an update of the robot sensors.

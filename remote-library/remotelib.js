@@ -1550,7 +1550,7 @@ Remote.prototype = {
 
     else if (msg.name == "QRCODEAPPEAR") {
       //console.log("NewQR");
-      //console.log(msg.value)
+      console.log(msg.value)
       this.statusmap.set("qrx",parseInt(msg.value["coordx"]));
       this.statusmap.set("qry",parseInt(msg.value["coordy"]));
       this.statusmap.set("qrdist",parseInt(msg.value["distance"]));

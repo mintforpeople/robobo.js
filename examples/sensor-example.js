@@ -2,7 +2,7 @@ async function main(){
 
     var Robobo = require('../robobo');
 
-    var robobo = new Robobo('192.168.0.71');
+    var robobo = new Robobo('192.168.0.39');
 
 
 
@@ -26,6 +26,7 @@ async function main(){
         robobo.print("Claps: "+JSON.stringify(robobo.readClapCounter()));
         robobo.print("Fling: "+JSON.stringify(robobo.readFlingSensor()));
         robobo.print("Tap: "+JSON.stringify(robobo.readTapSensor()));
+        robobo.print("Brightness: "+JSON.stringify(robobo.readBrightnessSensor()));
         robobo.print("Battery: "+JSON.stringify(robobo.readBatteryLevel()));
 
     }

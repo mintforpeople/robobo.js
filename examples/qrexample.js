@@ -2,14 +2,14 @@ async function main(){
 
     var Robobo = require('../robobo');
 
-    var robobo = new Robobo('192.168.0.45');
+    var robobo = new Robobo('192.168.0.71');
 
 
     await robobo.connect();
-    robobo.whenANewQRCodeIsDetected(() => 
+    robobo.whenQRCodeIsDetected(() => 
     {
         qr = robobo.readQR()
-        console.log(qr);
+        //console.log(qr);
        
 
     }

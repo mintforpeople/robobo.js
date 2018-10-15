@@ -7,6 +7,7 @@ async function main(){
 
 
     console.log(process.argv);
+    await robobo.connect();
 
     
     await robobo.sayText('asas');
