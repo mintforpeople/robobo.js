@@ -86,8 +86,12 @@ class Robobo {
         while (this.rem.connectionState == Remote.ConnectionStateEnum.CONNECTING) {
              await this.update();
         }
-
-        console.log('ROBOBO: Connected to robot at '+this.ip);
+        if (this.rem.connectionState != Remote.ConnectionStateEnum.CONNECTED){
+            console.log('ROBOBO: Failed to connect to the robot');
+        }
+        else {
+            console.log('ROBOBO: Connected to robot at '+this.ip);
+        }
     }
 
     /** Disconnects the library from the Robobo robot
@@ -637,7 +641,7 @@ class Robobo {
     /**
      * Configures the callback that is called when a face is lost
      *
-     * @param {Function} fun The callback to be called
+     * @param {Function} fun The callback to be called 
      * @memberof Robobo
      */
     whenAFaceIsLost(fun) {

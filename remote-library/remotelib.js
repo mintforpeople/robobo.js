@@ -27,6 +27,7 @@ const WebSocket = require('ws');
 
 //Constructor of the remote control object
 function Remote(ip,passwd){
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" 
   this.ip = ip.trim();
   this.port = 40404;
 
@@ -226,7 +227,7 @@ Remote.prototype = {
       if (this.callbackmap.get("onConnectionChanges")!=undefined){
           (this.callbackmap.get("onConnectionChanges"))(0);
       }
-      console.log("Error in websocket connection to Robobo: "+error);
+      console.log("Error in websocket connection to Robobo: "+JSON.stringify(error));
     }.bind(this);
 
     this.setIRValue('Back-R',0);

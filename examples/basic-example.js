@@ -2,7 +2,7 @@ async function main(){
 
     var Robobo = require('../robobo');
 
-    var robobo = new Robobo('192.168.0.71');
+    var robobo = new Robobo('192.168.0.39');
 
 
 
