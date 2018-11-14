@@ -374,6 +374,15 @@ class Robobo {
     resetFaceSensor() {
         this.rem.resetFaceSensor();
     }
+    /** Returns the noise level
+     *
+     *
+     * @returns {Integer} Noise SPL
+     * @memberof Robobo
+     */
+    readNoiseLevel() {
+        return this.rem.getNoise();
+    }
     /** Returns the number of claps registered since the last reset
      *
      *

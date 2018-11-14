@@ -550,6 +550,10 @@ Remote.prototype = {
 
   },//ENDOF movePanWait
 
+  getNoise:function(){
+    return this.statusmap.get("noiselevel")
+
+  },
   /** Returns the current PAN position */
   getPan:function() {
     return this.statusmap.get("panPos")
@@ -1574,6 +1578,12 @@ Remote.prototype = {
 
       this.callbackmap.get("onQRDisappear")();
 
+  
+    }
+
+    else if (msg.name == "NOISE") {
+     
+      this.statusmap.set("noiselevel",parseFloat(msg.value["level"]));
   
     }
 
