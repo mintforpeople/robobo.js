@@ -13,7 +13,6 @@ async function main(){
     robobo.changeStatusFrequency('MAX');
     robobo.setLedColorTo('Front-R','red');
     //robobo.setLedColorTo('all','blue');
-
     await robobo.pause(1);
     while(true){
         await robobo.update();
