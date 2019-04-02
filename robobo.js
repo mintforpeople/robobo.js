@@ -57,6 +57,7 @@ class Robobo {
         this.LostQRFlag = false;
         this.NewFaceFlag = false;
         this.NoteFlag = false;
+        this.ClapFlag = false;
         this.TapFlag = false;
 
         this.rem.registerCallback('talkCallback',this.unlockFunction);
@@ -289,6 +290,12 @@ class Robobo {
         return this.rem.getWheel(wheel,'speed');
     }
 
+    /** Resets the encoders of the wheels
+     */
+    resetWheelEncoders() {
+        this.rem.resetEncoders();
+    }
+
     /** Returns the current position of the PAN
      * 
      * @returns the current position of the pan
@@ -497,7 +504,7 @@ class Robobo {
      * @param {Boolean} custom Enables custom blob tracking
      * @memberof Robobo
      */
-    setColorBlobDetectionActive(red, green, blue, custom) {
+    setActiveBlobs(red, green, blue, custom) {
         this.rem.configureBlobDetection(red,green,blue,custom);
     }
     
@@ -622,9 +629,24 @@ class Robobo {
                 this.NoteFlag = false;
             }
         });
-
-        
     }
+
+    /** Configures the callback that is called when a new clap is detected
+     * 
+     * @param {Function} fun fun The callback to be called
+     * @memberof Robobo
+     */
+    whenClapIsDetected(fun) {
+        this.res.registerCallback("onNewClap", ()=> {
+            if (this.ClapFlag){
+                console.log("Warning:  callback ignored, too much concurrent calls");
+            }else{
+                this.ClapFlag = true;
+                fun();
+                this.ClapFlag = false;
+            }            
+        });
+    }    
 
     /**
      * Configures the callback that is called when a new face is detected
